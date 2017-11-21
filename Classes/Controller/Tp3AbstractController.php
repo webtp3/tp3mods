@@ -56,7 +56,7 @@ abstract class Tp3AbstractController extends \TYPO3\CMS\Extbase\Mvc\Controller\A
      */
     public function initializeAction()
     {
-        $this->setDefaultViewVars();
+       // $this->setDefaultViewVars();
 
         //$this->Div = new Tp3Eid();
     }
@@ -112,23 +112,7 @@ abstract class Tp3AbstractController extends \TYPO3\CMS\Extbase\Mvc\Controller\A
             $this->response->appendContent($this->unknownErrorMessage);
         }
     }
-    /**
-     * This method assigns some default variables to the view
-     */
-    private function setDefaultViewVars() {
-        if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::getExtensionVersion('extbase')) >= 1003000) {
-            $cObjData = $this->configurationManager->getContentObject()->data;
-        } else {
-            $cObjData = $this->request->getContentObjectData();
-        }
-        //   $this->conf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']["tx_".strtolower($this->extKey)]);
-        //	$this->layout = $this->settings["layout"] ? $this->settings["layout"] : "style05";
-        $this->cObjRenderer = new \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer();
-        $configurationManager = $this->objectManager->get('TYPO3\\CMS\\Extbase\\Configuration\\ConfigurationManager');
-        $this->conf = $configurationManager->getConfiguration(\TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK);
-        $this->pageRenderer = $this->objectManager->get('TYPO3\\CMS\\Core\\Page\\PageRenderer');
 
-    }
     /**
      * action translate
      *
