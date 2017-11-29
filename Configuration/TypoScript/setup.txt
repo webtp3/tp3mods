@@ -67,3 +67,30 @@ module.tx_tp3mods_tools_tp3modstp3backend {
     layoutRootPaths.1 = module.tx_tp3mods_tp3backend.view.layoutRootPath
   }
 }
+lib.fluidContent {
+    templateRootPaths {
+        200 = EXT:tp3mods/Resources/Private/Templates/ContentElements/
+    }
+}
+
+tt_content {
+    tp3mods_downloads < lib.fluidContent
+    tp3mods_downloads {
+        templateName = Tp3Downloads.html
+    }
+}
+
+/*
+tt_content {
+   tp3mods_downloads < lib.fluidContent
+   tp3mods_downloads {
+      templateName = Tp3Downloads.html
+      dataProcessing {
+         1 = Vendor\YourExtensionKey\DataProcessing\NewContentElementProcessor
+         1 {
+            useHere = theConfigurationOfTheDataProcessor
+         }
+      }
+   }
+}
+ */

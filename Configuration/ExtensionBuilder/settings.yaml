@@ -48,20 +48,20 @@ overwriteSettings:
 
   Configuration:
     #TCA merge not possible - use overrides directory
-    #TypoScript: keep
+    TypoScript: keep
 
   Resources:
     Private:
-      #Language: merge
-      #Templates: keep
+      Language: merge
+      Templates: merge
 
   ext_icon.gif: keep
 
-#  ext_localconf.php: merge
+  ext_localconf.php: merge
 
-#  ext_tables.php: merge
+  ext_tables.php: merge
 
-#  ext_tables.sql: merge
+  ext_tables.sql: merge
 
 ## use static date attribute in xliff files ##
 #staticDateInXliffFiles: 2017-11-05T01:44:00Z

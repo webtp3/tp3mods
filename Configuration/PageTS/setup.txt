@@ -1,0 +1,13 @@
+mod.wizards.newContentElement.wizardItems.common {
+    elements {
+        tp3mods_downloads {
+            iconIdentifier = content-tp3mods-downloads
+            title = LLL:EXT:tp3mods/Resources/Private/Language/locallang_tp3backend.xlf:tp3mods_downloads.wizard.title
+            description = LLL:EXT:tp3mods/Resources/Private/Language/locallang_tp3backend.xlf:tp3mods_downloads.wizard.description
+            tt_content_defValues {
+                CType = tp3mods_downloads
+            }
+        }
+    }
+    show := addToList(tp3mods_downloads)
+}

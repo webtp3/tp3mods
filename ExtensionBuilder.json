@@ -96,8 +96,8 @@
             "skipGenerateDocumentationTemplate": false,
             "sourceLanguage": "en",
             "state": "beta",
-            "targetVersion": "7.6.0-7.6.99",
-            "version": "1.0.1"
+            "targetVersion": "7.6.0-8.9.99",
+            "version": "1.0.2"
         },
         "extensionKey": "tp3mods",
         "name": "tp3 Mods",

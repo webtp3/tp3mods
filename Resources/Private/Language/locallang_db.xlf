@@ -9,6 +9,12 @@
 			<trans-unit id="tx_tp3mods_domain_model_tp3micro.description">
 				<source></source>
 			</trans-unit>
+			<trans-unit id="tp3mods_downloads">
+				<source>Downloads</source>
+			</trans-unit>
+			<trans-unit id="tp3mods_downloads.description">
+				<source>Show downloads in diferent views</source>
+			</trans-unit>
 			<trans-unit id="tx_tp3mods_domain_model_tp3mods">
 				<source>Tp3 Mods</source>
 			</trans-unit>

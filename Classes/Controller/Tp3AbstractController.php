@@ -33,7 +33,6 @@ abstract class Tp3AbstractController extends \TYPO3\CMS\Extbase\Mvc\Controller\A
     protected $pageRenderer;
 
     /**
-    /**
      *
      * @var \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer
      */
@@ -56,9 +55,7 @@ abstract class Tp3AbstractController extends \TYPO3\CMS\Extbase\Mvc\Controller\A
      */
     public function initializeAction()
     {
-       // $this->setDefaultViewVars();
-
-        //$this->Div = new Tp3Eid();
+     //   parent::initializeAction();
     }
     /**
      * @param \TYPO3\CMS\Extbase\Mvc\RequestInterface $request
@@ -68,18 +65,13 @@ abstract class Tp3AbstractController extends \TYPO3\CMS\Extbase\Mvc\Controller\A
      * @override \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
      */
     public function processRequest(\TYPO3\CMS\Extbase\Mvc\RequestInterface $request, \TYPO3\CMS\Extbase\Mvc\ResponseInterface $response) {
-     /*   if (count($request->getArguments())> 0 &&  $request->getArgument("eID") == "rating" && $request->hasArgument("ratingdata") ) {
-            //&& $this->resolveActionMethodName() == "ratingAction"
-            $data_str = $request->getArgument("ratingdata");
-            $request->SetArgument("ratingdata", unserialize(base64_decode($data_str)));
-            if($request->hasArgument("check"))$request->SetArgument("check",$request->getArgument("check"));
-        }*/
+
         try {
             parent::processRequest($request, $response);
         }
         catch(\TYPO3\CMS\Extbase\Property\Exception $e) {
             if ($e->getPrevious() instanceof \TYPO3\CMS\Extbase\Property\Exception\InvalidPropertyException) {
-                $GLOBALS['TSFE']->pageNotFoundAndExit('kaputt.');
+                $GLOBALS['TSFE']->pageNotFoundAndExit($this->entityNotFoundMessage, 'HTTP/1.1 404 Page not found');
             } else {
                 throw $e;
             }
@@ -113,15 +105,4 @@ abstract class Tp3AbstractController extends \TYPO3\CMS\Extbase\Mvc\Controller\A
         }
     }
 
-    /**
-     * action translate
-     *
-     * @return string
-     */
-
-    private function gettranslation($key){
-        //$extensionName = "Tp3share";
-        $trans = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate( $key, $this->extKey);
-        return $trans != "" ? $trans : "keine translation";
-    }
 }
