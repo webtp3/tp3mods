@@ -21,6 +21,25 @@
 			<trans-unit id="tp3mods_downloads.wizard.description">
                 <source>Show downloads from files</source>
             </trans-unit>
+            <trans-unit id="tp3mods_downloads.position">
+                <source>Position</source>
+            </trans-unit>
+             <trans-unit id="tp3mods_downloads.position.left">
+                 <source>Left</source>
+             </trans-unit>
+              <trans-unit id="tp3mods_downloads.position.right">
+                  <source>Right</source>
+             </trans-unit>
+              <trans-unit id="tp3mods_downloads.position.center">
+                  <source>Center</source>
+             </trans-unit>
+            <trans-unit id="tp3mods_downloads.thumbnails">
+                <source>Thumbnails</source>
+            </trans-unit>
+             <trans-unit id="tp3mods_downloads.thumbnails.description">
+                  <source>Display Thumbnails</source>
+             </trans-unit>
+
 		</body>
 	</file>
 </xliff>

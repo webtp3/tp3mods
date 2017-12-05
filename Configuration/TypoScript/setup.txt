@@ -71,8 +71,13 @@ lib.fluidContent {
     templateRootPaths {
         200 = EXT:tp3mods/Resources/Private/Templates/ContentElements/
     }
+     partialRootPaths {
+            200 = EXT:tp3mods/Resources/Private/Partials/ContentElements/
+        }
+    layoutRootPaths {
+        200 = EXT:tp3mods/Resources/Private/Layouts/ContentElements/
+    }
 }
-
 tt_content {
     tp3mods_downloads < lib.fluidContent
     tp3mods_downloads {
