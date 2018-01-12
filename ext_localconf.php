@@ -31,7 +31,7 @@ call_user_func(
                 wizards.newContentElement.wizardItems.plugins {
                     elements {
                         tp3micro {
-                            icon = &#039; . \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($extKey) . &#039;Resources/Public/Icons/user_plugin_tp3micro.svg
+                            icon = ' . \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($extKey) . 'Resources/Public/Icons/user_plugin_tp3micro.svg
                             title = LLL:EXT:tp3mods/Resources/Private/Language/locallang_db.xlf:tx_tp3mods_domain_model_tp3micro
                             description = LLL:EXT:tp3mods/Resources/Private/Language/locallang_db.xlf:tx_tp3mods_domain_model_tp3micro.description
                             tt_content_defValues {
@@ -49,7 +49,7 @@ call_user_func(
                 wizards.newContentElement.wizardItems.common{
                     elements {
                         tp3mods_downloads {
-                            icon = &#039; . \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($extKey) . &#039;Resources/Public/Icons/user_plugin_tp3micro.svg
+                            icon = ' . \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($extKey) . 'Resources/Public/Icons/user_plugin_tp3micro.svg
                             title = LLL:EXT:tp3mods/Resources/Private/Language/locallang_db.xlf:tp3mods_downloads
                             description = LLL:EXT:tp3mods/Resources/Private/Language/locallang_db.xlf:tp3mods_downloads.description
                             tt_content_defValues {

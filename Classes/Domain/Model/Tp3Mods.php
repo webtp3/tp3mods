@@ -8,7 +8,7 @@ namespace Tp3\Tp3mods\Domain\Model;
  * For the full copyright and license information, please read the
  * LICENSE.txt file that was distributed with this source code.
  *
- *  (c) 2017 Thomas Ruta &lt;email@thomasruta.de&gt;, R&amp;P IT Consulting GmbH
+ *  (c) 2017 Thomas Ruta <email@thomasruta.de>, R&amp;P IT Consulting GmbH
  *
  ***/
 

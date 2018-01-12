@@ -79,23 +79,8 @@ $GLOBALS['TCA']['tt_content']['types']['tp3mods_downloads'] = array_replace_recu
 $GLOBALS['TCA']['tt_content']['columns'] = array_replace_recursive(
     $GLOBALS['TCA']['tt_content']['columns'],
     [
-       /* 'icon' => [
-            'label' => 'LLL:EXT:bootstrap_package/Resources/Private/Language/Backend.xlf:field.icon',
-            'config' => [
-                'type' => 'select',
-                'renderType' => 'selectSingle',
-                'items' => [
-                    ['LLL:EXT:bootstrap_package/Resources/Private/Language/Backend.xlf:option.none', 0, 'EXT:bootstrap_package/Resources/Public/Images/Icons/none.jpg'],
-                ],
-                'itemsProcFunc' => 'BK2K\BootstrapPackage\Utility\TextIconUtility->addIconItems',
-                'fieldWizard' => [
-                    'selectIcons' => [
-                        'disabled' => false,
-                    ],
-                ],
-            ],
-        ],*/
-        'icon_position' => [
+
+       /* 'icon_position' => [
             'label' => 'LLL:EXT:tp3mods/Resources/Private/Language/locallang_tp3backend.xlf:tp3mods_downloads.position',
             'config' => [
                 'type' => 'select',
@@ -120,25 +105,8 @@ $GLOBALS['TCA']['tt_content']['columns'] = array_replace_recursive(
                 ],
             ],
         ],
+*/
 
-        /*'icon_color' => [
-            'displayCond' => 'FIELD:icon_type:!=:0',
-            'label' => 'LLL:EXT:bootstrap_package/Resources/Private/Language/Backend.xlf:field.icon_color',
-            'config' => [
-                'type' => 'input',
-                'renderType' => 'colorpicker',
-                'default' => '#FFFFFF',
-            ],
-        ],
-        'icon_background' => [
-            'displayCond' => 'FIELD:icon_type:!=:0',
-            'label' => 'LLL:EXT:bootstrap_package/Resources/Private/Language/Backend.xlf:field.icon_background',
-            'config' => [
-                'type' => 'input',
-                'renderType' => 'colorpicker',
-                'default' => '#333333',
-            ],
-        ],*/
     ]
 );
 
