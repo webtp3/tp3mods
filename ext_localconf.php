@@ -25,7 +25,11 @@ call_user_func(
 // Register for hook to show preview of tt_content element of CType="tp3mods_downloads" in page module
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms/layout/class.tx_cms_layout.php']['tt_content_drawItem']['tp3mods_downloads'] =
             \Tp3\Tp3mods\Hooks\PageLayoutView\Downloads::class;
-        // wizards
+
+    //    $GLOBALS["TYPO3_CONF_VARS"]['EXTCONF']['realurl']['_DEFAULT'] = $TYPO3_CONF_VARS['EXTCONF']['realurl']['_DEFAULT'];
+     //   $GLOBALS["TYPO3_CONF_VARS"]['EXTCONF']['realurl']['_DEFAULT']['pagePath']['rootpage_id'] = 0;
+     //   $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['checkAlternativeIdMethods-PostProc']['realurl'] = 'Tp3\\Tp3mods\\Exception\\Error404->pageNotFound';
+// wizards
         \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPageTSConfig(
             'mod {
                 wizards.newContentElement.wizardItems.plugins {
