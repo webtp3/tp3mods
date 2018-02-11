@@ -10,6 +10,7 @@ call_user_func(
         if (!is_array($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$_EXTKEY])) {
             $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$_EXTKEY] = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$_EXTKEY]);
         }
+        $GLOBALS['TYPO3_CONF_VARS']['RTE']['Presets']['bootstrap'] = 'EXT:tp3mods/Configuration/RTE/Default.yaml';
 
         \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
             'Tp3.Tp3mods',
@@ -32,7 +33,7 @@ call_user_func(
 // wizards
         \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPageTSConfig(
             'mod {
-                wizards.newContentElement.wizardItems.plugins {
+                wizards.newContentElement.wizardItems.plugins{
                     elements {
                         tp3micro {
                             icon = ' . \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($extKey) . 'Resources/Public/Icons/user_plugin_tp3micro.svg
