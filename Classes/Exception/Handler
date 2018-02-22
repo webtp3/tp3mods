@@ -1,5 +1,5 @@
 <?php
-namespace Tp3\Tp3mods\Controller;
+namespace \Tp3\Tp3mods\Exception;
 
 /***
  *
@@ -12,15 +12,13 @@ namespace Tp3\Tp3mods\Controller;
  *
  ***/
 
+use \TYPO3\CMS\Core\Log\Exception;
+use \TYPO3\CMS\Extbase\Mvc\Request;
+use \TYPO3\CMS\Extbase\Mvc\Response;
 /**
- * Tp3AbstractController
+ * Handler
  */
-abstract class Tp3AbstractController extends \TYPO3\CMS\Extbase\Mvc\Controller\AbstractController
-{
-    /**
-     * @var \TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface
-     */
-    protected $persistenceManager;
+class Handler extends \TYPO3\CMS\Core\Error\ErrorHandler{
 
     /**
      *
@@ -45,42 +43,48 @@ abstract class Tp3AbstractController extends \TYPO3\CMS\Extbase\Mvc\Controller\A
      */
     protected $unknownErrorMessage = 'An unknown error occurred. The wild monkey horde in our basement will try to fix this as soon as possible.';
 
-    /**
-     * Initializes the current action
-     *
-     * @return void
+
+     /**
+     * @param \TYPO3\CMS\Extbase\Mvc\RequestInterface $request
+     * @param \TYPO3\CMS\Extbase\Mvc\ResponseInterface $response
+     *  @return void
+     * @throws \Exception
+     * @override \TYPO3\CMS\Extbase\Mvc\Controller\ErrorController
      */
-    public function initializeAction()
-    {
-     //   parent::initializeAction();
-    }
+        public function processError(\TYPO3\CMS\Extbase\Mvc\RequestInterface $request, \TYPO3\CMS\Extbase\Mvc\ResponseInterface $response) {
+
+            try {
+                parent::processRequest($request, $response);
+            }
+            catch(\TYPO3\CMS\Extbase\Property\Exception $e) {
+                if ($e->getPrevious() instanceof \TYPO3\CMS\Extbase\Property\Exception\InvalidPropertyException) {
+                    $this->pageNotFound($e);
+                } else {
+                    throw $e;
+                }
+            }
+        }
+
     /**
      * @param \TYPO3\CMS\Extbase\Mvc\RequestInterface $request
      * @param \TYPO3\CMS\Extbase\Mvc\ResponseInterface $response
      *  @return void
      * @throws \Exception
-     * @override \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
+     * @override \TYPO3\CMS\Extbase\Mvc\Controller\ErrorController
      */
-    public function processRequest(\TYPO3\CMS\Extbase\Mvc\RequestInterface $request, \TYPO3\CMS\Extbase\Mvc\ResponseInterface $response) {
+    public function pageNotFound($e = NULL) {
 
-        try {
-            parent::processRequest($request, $response);
-        }
-        catch(\TYPO3\CMS\Extbase\Property\Exception $e) {
-            if ($e->getPrevious() instanceof \TYPO3\CMS\Extbase\Property\Exception\InvalidPropertyException) {
+
                 $GLOBALS['TSFE']->pageNotFoundAndExit($this->entityNotFoundMessage, 'HTTP/1.1 404 Page not found');
-            } else {
-                throw $e;
-            }
-        }
+
     }
     /**
      * @return void
      * @override \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
      */
-    protected function callActionMethod() {
+    protected function callErrorMethod() {
         try {
-            parent::callActionMethod();
+        //    parent::callActionMethod();
         }
         catch(\Exception $exception) {
             // This enables you to trigger the call of TYPO3s page-not-found handler by throwing \TYPO3\CMS\Core\Error\Http\PageNotFoundException
@@ -101,5 +105,4 @@ abstract class Tp3AbstractController extends \TYPO3\CMS\Extbase\Mvc\Controller\A
             $this->response->appendContent($this->unknownErrorMessage);
         }
     }
-
 }
