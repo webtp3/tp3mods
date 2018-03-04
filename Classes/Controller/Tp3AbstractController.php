@@ -18,9 +18,12 @@ namespace Tp3\Tp3mods\Controller;
 abstract class Tp3AbstractController extends \TYPO3\CMS\Extbase\Mvc\Controller\AbstractController
 {
     /**
-     * @var \TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface
+     * @var \TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager
+     *
      */
+
     protected $persistenceManager;
+
 
     /**
      *
