@@ -9,116 +9,11 @@ var wndH = window.height- windowPadding * 2 - bottomPadding;
 //	var docReady = $.Deferred();
 //	var facebookReady = $.Deferred();
 var businessviewCanvasSelector =  businessviewCanvasSelector || "#businessview-canvas",
+    google = google || {},
     businessviewJson = businessviewJson || {},
     scrollTimeStart = new Date,
     WECInit = WECInit || undefined;
-var canvasDots = function() {
-    //   var canvas = $j('.connecting-dots').length < 1 ? $j('<canvas class="connecting-dots"></canvas>').prependTo($('#content').first()).hide() : $j('.connecting-dots');
-    var canvas = document.querySelector('canvas'),
-        ctx = canvas.getContext('2d'),
-        colorDot = 'rgba(2,2,2,0.1)',
-        color = '#ccc';
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    canvas.style.display = 'block';
-    ctx.fillStyle = colorDot;
-    ctx.lineWidth = .1;
-    ctx.strokeStyle = color;
 
-    var mousePosition = {
-        x: 30 * canvas.width / 100,
-        y: 30 * canvas.height / 100
-    };
-
-    var dots = {
-        nb: 600,
-        distance: 60,
-        d_radius: 100,
-        array: []
-    };
-
-    function Dot(){
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-
-        this.vx = -.5 + Math.random();
-        this.vy = -.5 + Math.random();
-
-        this.radius = Math.random();
-    }
-
-    Dot.prototype = {
-        create: function(){
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-            ctx.fill();
-        },
-
-        animate: function(){
-            for(i = 0; i < dots.nb; i++){
-
-                var dot = dots.array[i];
-
-                if(dot.y < 0 || dot.y > canvas.height){
-                    dot.vx = dot.vx;
-                    dot.vy = - dot.vy;
-                }
-                else if(dot.x < 0 || dot.x > canvas.width){
-                    dot.vx = - dot.vx;
-                    dot.vy = dot.vy;
-                }
-                dot.x += dot.vx;
-                dot.y += dot.vy;
-            }
-        },
-
-        line: function(){
-            for(i = 0; i < dots.nb; i++){
-                for(j = 0; j < dots.nb; j++){
-                    i_dot = dots.array[i];
-                    j_dot = dots.array[j];
-
-                    if((i_dot.x - j_dot.x) < dots.distance && (i_dot.y - j_dot.y) < dots.distance && (i_dot.x - j_dot.x) > - dots.distance && (i_dot.y - j_dot.y) > - dots.distance){
-                        if((i_dot.x - mousePosition.x) < dots.d_radius && (i_dot.y - mousePosition.y) < dots.d_radius && (i_dot.x - mousePosition.x) > - dots.d_radius && (i_dot.y - mousePosition.y) > - dots.d_radius){
-                            ctx.beginPath();
-                            ctx.moveTo(i_dot.x, i_dot.y);
-                            ctx.lineTo(j_dot.x, j_dot.y);
-                            ctx.stroke();
-                            ctx.closePath();
-                        }
-                    }
-                }
-            }
-        }
-    };
-
-    function createDots(){
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        for(i = 0; i < dots.nb; i++){
-            dots.array.push(new Dot());
-            dot = dots.array[i];
-
-            dot.create();
-        }
-
-        dot.line();
-        dot.animate();
-    }
-
-    window.onmousemove = function(parameter) {
-        mousePosition.x = parameter.pageX;
-        mousePosition.y = parameter.pageY;
-    }
-
-    mousePosition.x = window.innerWidth / 2;
-    mousePosition.y = window.innerHeight / 2;
-
-    setInterval(createDots, 1000/30);
-};
-
-window.onload = function() {
-    //canvasDots();
-};
 var QueryString = function () {
 
     var query_string = {};
@@ -206,7 +101,9 @@ $( window ).on("resize",function() {
 });
 window.tp3_app=window.tp3_app||{
     initialize:function(){
-        if(WECInit != undefined && $.type(WECInit) == "function"){
+        window.tp3_app.init = true;
+
+        try{
             google.maps.event.addDomListener(window,"load", function () {
                 if ( !window["WecMap"] )
                     WecMap = createWecMap();
@@ -214,6 +111,8 @@ window.tp3_app=window.tp3_app||{
                 InitWecMapGoogleV3Labels();
                 WECInit();
             })
+        }catch (e){
+            console.log(e);
         }
 
         if(window.location.hash && $(".page-" + window.location.hash.substring(1)).length > 0){
@@ -236,8 +135,6 @@ window.tp3_app=window.tp3_app||{
                     scrollTarget: ".page-" + document.location.hash.substring(1)
                 });
             }
-
-
             window.history.pushState({}, '', document.location.hash);
         }else if($(window.location.hash).length > 0){
             e.preventDefault();
@@ -250,50 +147,126 @@ window.tp3_app=window.tp3_app||{
             window.history.pushState({}, '', window.location.hash);
         }
         console.log(businessviewJson);
-        if(businessviewJson.hasDetails && $(businessviewCanvasSelector).length > 0){initialize(businessviewJson);}else{console.log(businessviewJson.errorMessage);}
+        if(businessviewJson.hasDetails && $j(businessviewCanvasSelector).length > 0){window.tp3_app.businessview_initialize(businessviewJson);}
+        else{console.log(businessviewJson.errorMessage);}
+        if($j.type(window.tp3_app.controls == "function"))window.tp3_app.controls();
     }};
-
-$( function () {
-    // $('.main-section  section').css({"min-height":screen.height});
-    if($('.breadcrumb-section .container').text() == ""){
-        if($('.navbar-fixed-top').length <1 && $('.breadcrumb-section').next().offset() != undefined) $('.breadcrumb-section').next().css({"padding-top": $('.breadcrumb-section').next().offset().top + $('.breadcrumb-section').height()});
-        $('.breadcrumb-section').hide()
+var sl = 0,
+    section_image = section_image || false;
+window.tp3_app.backmove= function(e){
+    if(e == undefined)e = $j('body').first();
+    if(section_image["section#p" + $j(e).attr("id").split("-")[1]].length > 0 && section_image["section#p" + $j(e).attr("id").split("-")[1]][sl].background != ""){
+        $j("#" + $j(e).attr("id") +" > .body-bg").css({"background-image":"url("+section_image["section#p" + $j(e).attr("id").split("-")[1]][sl].background+")","background-size":"cover"})
+        /*$j("#" + $j(e).attr("id") +" > .body-bg").fadeTo('slow', 0.3, function(){
+            $j(this).css('background-image', 'url(' + section_image["section#p" + $j(e).attr("id").split("-")[1]][sl].background + ')');
+        }).fadeTo('slow', 1);	*/
+        sl++;
+        if(sl >= section_image["section#p" + $j(e).attr("id").split("-")[1]].length) sl = 0;
+        setTimeout(function(){window.tp3_app.backmove(e)},  15000);
     }
-    if($('.navbar-top').length > 0 ){
-        $('#content').css({"padding-top":0})
-    }
-    /*
-    $('#businessview-panorama-canvas .container ul').css( {
-        display: block;
-        list-style-type: disc;
-        -webkit-margin-before: 1em;
-        -webkit-margin-after: 1em;
-        -webkit-margin-start: 0px;
-        -webkit-margin-end: 0px;
-        -webkit-padding-start: 20px;
-    })*/
-// scroll to top
-    /*$('a[href="#top"]').on('click', function(e) {
-        console.log(e);
-            e.preventDefault();
-
-        if(this.hash && $(this.hash).length > 0){
-        $(this).hide();
-        $('html,body').animate({scrollTop: $(this.hash)}, 500);
-      if(ga){ ga('send','event','scroll',
-                this.hash + ' Window: ' + $(window).height() + 'px; Document: ' + $(document).height() + 'px; Time: ' + Math.round((new Date - scrollTimeStart )/1000,1) + 's',
-                {'nonInteraction':1}
-            );
+}
+window.tp3_app.watchdog = function () {
+    $j(document).on("loaded",function(){
+        if(!window.tp3_app.init){
+            //if(WECInit != undefined && $j.type(WECInit) == "function")window.tp3_app.initialize();
+            if(!window.tp3_app.init) window.tp3_app.controls();
+            window.tp3_app.init = true;
         }
-        window.history.pushState({}, '', this.hash);
-        e.preventDefault();
-      }
-        else if(this.hash.length > 0)
-        document.location = "/"+ this.hash;
+    })
+}
+window.tp3_app.init = false;
+window.tp3_app.scriptsload = function(data){
+    var data_txt = data;
 
-        return false;
-      });*/
-// Navigation for one page or slideshow
+    $j(data_txt.responseText).each(function(){
+        if(this.tagName == "script" || this.tagName == "SCRIPT"){
+
+
+            if(this.src != undefined){
+
+                //if(!this.src.toString().match(/fileadmin\/script/g))
+                //if(!this.src.toString().match(/app/g))
+                if(this.src.toString().match(/fileadmin\/script/g).length < 1 && this.src.toString().match(/app.js/g).length < 1 && this.src.toString().match(/jquery/g).length < 1)loadScript(this.src)
+                /* $j.getScript(this.src, function(datax, textStatus, jqxhr) {
+                    console.log(this, datax); //data returned
+                   var sc = $j('<script/>', {
+                      language: 'JavaScript',
+                   text: datax != undefined && datax != '' ? datax : '',
+                    }).appendTo('head');
+                    console.log(textStatus); //success
+                    console.log(jqxhr.status); //200
+                    console.log('Load was performed.');
+                  });
+                  console.log(this)  */
+            }
+            else{
+                var str = $j(this).text();
+                var regex = /window.history.back()/gi;
+                var sc = $j('<script/>', {
+                    language: 'JavaScript',
+                    text: str.replace(regex, "<!-- cut -->")
+                }).appendTo('head');
+            }
+        }
+
+    })
+}
+window.tp3_app.watchdog();
+window.tp3_app.isotop = function(){
+    if($j.type($j.fn.isotope) == "function"){ var $container = $j('.product_listing.row').isotope({
+        itemSelector: '.element-item',
+        layoutMode: 'fitRows',
+        getSortData: {
+            image: '.image',
+            category: '.category',
+            number: '.products_price',
+            category: '.products_name',
+
+        }
+    });
+    }
+
+    // filter functions
+    var filterFns = {
+        // show if number is greater than 50
+        numberGreaterThan50: function() {
+            var number = $j(this).find('.number').text();
+            return parseInt( number, 10 ) > 50;
+        },
+        // show if name ends with -ium
+        ium: function() {
+            var name = $j(this).find('.name').text();
+            return name.match( /ium$/ );
+        }
+    };
+
+    // bind filter button click
+    $j('#filters').on( 'click', 'button', function() {
+        var filterValue = $j( this ).attr('data-filter');
+        // use filterFn if matches value
+        filterValue = filterFns[ filterValue ] || filterValue;
+        $container.isotope({ filter: filterValue });
+    });
+
+    // bind sort button click
+    $j('#sorts').on( 'click', 'button', function() {
+        var sortByValue = $j(this).attr('data-sort-by');
+        $container.isotope({ sortBy: sortByValue });
+    });
+
+    // change is-checked class on buttons
+    $j('.button-group').each( function( i, buttonGroup ) {
+        var $buttonGroup = $j( buttonGroup );
+        $buttonGroup.on( 'click', 'button', function() {
+            $buttonGroup.find('.is-checked').removeClass('is-checked');
+            $j( this ).addClass('is-checked');
+        });
+    });
+}
+window.tp3_app.onpage = function(){
+
+
+
     $('.navbar-main a[href*="#"]:not(.dropdown-toggle), #logo').on('click', function(e) {
         console.log(e);
         if(this.hash && $(".page-" + this.hash.substring(1)).length > 0){
@@ -321,12 +294,8 @@ $( function () {
             document.location = "/"+ this.hash;
 
     });
-});
+}
 
-setTimeout(function() {
-    $(this).addClass('anim');
-    $('section .container, [id="content"], footer').fadeIn();
-}, 800);
 
 function tx_ratings_submit(id, rating, ajaxData, check) {
     jQuery('#tx-ratings-display-' + id).css('visibility', 'hidden');
@@ -349,15 +318,68 @@ jQuery.fn.insertElementAtIndex=function(element,index){var lastIndex=this.childr
 var panorama;var panoJumpTimer;var panoRotationTimer;var panoResizeTimer;var panoResizeCounter=0;var businessviewSidebarModulesSelector='';var showSidebar=false;var startCoords={},endCoords={};var zoom=1;var updateInfoPointsStartTimer;var updateInfoPointsCounter=0;var $panoCanvas=null;var panoCanvasHeight=0;var panoCanvasWidth=0;
 
 var tp3_app = window.tp3_app;
-var initialize= initialize || function(businessviewJson){var panoEntry;var panoOptions;if(businessviewJson.details.panoEntry){panoEntry=businessviewJson.details.panoEntry;}else{
-    var panoId='0yfJCnICQIUAAAQIt--IJw';if(businessviewJson.details.panoId){panoId=businessviewJson.details.panoId;}
-    panoEntry={panoId:panoId,heading:0,pitch:1,zoom:1};}
-    zoom=panoEntry.zoom;if(businessviewJson.details.panoOptions){panoOptions=businessviewJson.details.panoOptions;}else{panoOptions={disableDefaultUI:false,scrollwheel:false,panControl:true,zoomControl:true,scaleControl:true,addressControl:false};}
-    initialize_Panorama(panoEntry,panoOptions);if(businessviewJson.details.modules&&businessviewJson.details.modules.sidebar){var sidebar=businessviewJson.details.modules.sidebar;showSidebar=sidebar.status;if(showSidebar){businessviewSidebarModulesSelector=' div#businessview-sidebar-canvas .content .wrapper';appendSidebarToBusinessview(sidebar.showGoogleMap,sidebar.logoUrl,sidebar.collapsed,sidebar.align,sidebar.backgroundColor,sidebar.textColor);$(businessviewCanvasSelector).on('click','div#businessview-sidebar-canvas .toggle',function(){if($(businessviewCanvasSelector+' div#businessview-sidebar-canvas').hasClass('closed')){$(businessviewCanvasSelector+' div#businessview-sidebar-canvas').removeClass('closed').addClass('open');$(businessviewCanvasSelector+' div#businessview-sidebar-canvas .content').show();}else{$(businessviewCanvasSelector+' div#businessview-sidebar-canvas').removeClass('open').addClass('closed');$(businessviewCanvasSelector+' div#businessview-sidebar-canvas .content').hide();}});$(window).scroll(function(){resizeSidebar();});}}
-    if(businessviewJson.areas&&Object.size(businessviewJson.areas)>0){createAreaCanvas();if(businessviewJson.details.areaOrder&&businessviewJson.details.areaOrder.length>0){appendAreasToBusinessViewWithOrder(businessviewJson.areas,businessviewJson.details.areaOrder);}else{appendAreasToBusinessView(businessviewJson.areas);}
-        $('ul#businessview-area-canvas').on('click','li',function(){window.clearInterval(panoJumpTimer);var pov={heading:parseFloat($(this).attr('data-entry-panorama-heading')),pitch:parseFloat($(this).attr('data-entry-panorama-pitch'))};panorama.setPano($(this).attr('data-entry-panorama-id'));panorama.setPov(pov);});}
-    if(businessviewJson.actions&&Object.size(businessviewJson.actions)>0){createActionCanvas();if(businessviewJson.details.actionOrder&&businessviewJson.details.actionOrder.length>0){appendActionsToBusinessviewWithOrder(businessviewJson.actions,businessviewJson.details.actionOrder);}else{appendActionsToBusinessview(businessviewJson.actions);}
-        $('ul#businessview-action-canvas').on('click','li',function(){if($(this).attr('data-action-target')=='fancybox'){$.fancybox.open({href:decodeURIComponent($(this).attr('data-object-url')),type:'iframe',padding:0,width:'80%',height:'80%',helpers:{overlay:{locked:false}}});}else{window.location.href=decodeURIComponent($(this).attr('data-object-url'));}});}
+window.tp3_app.businessview_initialize = tp3_app.businessview_initialize  || function(businessviewJson){
+    var panoEntry;
+    var panoOptions;
+    if(businessviewJson.details.panoEntry){
+        panoEntry=businessviewJson.details.panoEntry;
+    }else{
+        var panoId='0yfJCnICQIUAAAQIt--IJw';
+        if(businessviewJson.details.panoId){
+            panoId=businessviewJson.details.panoId;
+        }
+        panoEntry={panoId:panoId,heading:0,pitch:1,zoom:1};
+    }
+    zoom=panoEntry.zoom;
+    if(businessviewJson.details.panoOptions){
+        panoOptions=businessviewJson.details.panoOptions;
+    }else{
+        panoOptions={disableDefaultUI:false,scrollwheel:false,panControl:true,zoomControl:true,scaleControl:true,addressControl:false};
+    }
+    initialize_Panorama(panoEntry,panoOptions);
+    if(businessviewJson.details.modules&&businessviewJson.details.modules.sidebar){
+        var sidebar=businessviewJson.details.modules.sidebar;showSidebar=sidebar.status;
+        if(showSidebar){
+            businessviewSidebarModulesSelector=' div#businessview-sidebar-canvas .content .wrapper';
+            appendSidebarToBusinessview(sidebar.showGoogleMap,sidebar.logoUrl,sidebar.collapsed,sidebar.align,sidebar.backgroundColor,sidebar.textColor);$(businessviewCanvasSelector).on('click',
+                'div#businessview-sidebar-canvas .toggle',function(){
+                    if($(businessviewCanvasSelector+' div#businessview-sidebar-canvas').hasClass('closed')){
+                        $(businessviewCanvasSelector+' div#businessview-sidebar-canvas').removeClass('closed').addClass('open');
+                        $(businessviewCanvasSelector+' div#businessview-sidebar-canvas .content').show();
+                    }else{
+                        $(businessviewCanvasSelector+' div#businessview-sidebar-canvas').removeClass('open').addClass('closed');
+                        $(businessviewCanvasSelector+' div#businessview-sidebar-canvas .content').hide();
+                    }
+                });
+            $(window).scroll(function(){
+                resizeSidebar();
+            });
+        }}
+    if(businessviewJson.areas&&Object.size(businessviewJson.areas)>0){
+        createAreaCanvas();
+        if(businessviewJson.details.areaOrder&&businessviewJson.details.areaOrder.length>0){
+            appendAreasToBusinessViewWithOrder(businessviewJson.areas,businessviewJson.details.areaOrder);
+        }else{appendAreasToBusinessView(businessviewJson.areas);
+        }
+        $('ul#businessview-area-canvas').on('click','li',function(){
+            window.clearInterval(panoJumpTimer);
+            var pov={heading:parseFloat(
+                    $(this).attr('data-entry-panorama-heading')
+                ),pitch:parseFloat($(this).attr('data-entry-panorama-pitch'))
+            };panorama.setPano($(this).attr('data-entry-panorama-id'));
+            panorama.setPov(pov);
+        });
+    }
+    if(businessviewJson.actions&&Object.size(businessviewJson.actions)>0){
+        createActionCanvas();
+        if(businessviewJson.details.actionOrder&&businessviewJson.details.actionOrder.length>0) {
+            appendActionsToBusinessviewWithOrder(businessviewJson.actions,businessviewJson.details.actionOrder);
+        }else{
+            appendActionsToBusinessview(businessviewJson.actions);
+        }
+        $('ul#businessview-action-canvas').on('click','li',function(){
+            if($(this).attr('data-action-target')=='fancybox'){
+                $.fancybox.open({href:decodeURIComponent($(this).attr('data-object-url')),type:'iframe',padding:0,width:'80%',height:'80%',helpers:{overlay:{locked:false}}});}else{window.location.href=decodeURIComponent($(this).attr('data-object-url'));}});}
     $panoCanvas=$(businessviewCanvasSelector+' div#businessview-panorama-canvas');panoCanvasHeight=$panoCanvas.height();panoCanvasWidth=$panoCanvas.width();if(businessviewJson.infoPoints&&Object.size(businessviewJson.infoPoints)>0){createInfoPointCanvas();appendInfoPointsToBusinessview();$(businessviewCanvasSelector).on('mouseenter','div#businessview-infopoint-canvas div.with-tooltip:not(.without-url)',function(){$(this).find('div.tooltip').removeAttr('style').attr('style',getTooltipPopupPosition($(this))).addClass(' visible');});$(businessviewCanvasSelector).on('mouseleave','div#businessview-infopoint-canvas div.with-tooltip:not(.without-url)',function(){$(this).find('div.tooltip').removeAttr('style').removeClass("visible");});$(businessviewCanvasSelector).on('click','div#businessview-infopoint-canvas .infoPoint',function(){if($(this).hasClass('without-url')){if(!$(this).find('div.tooltip').hasClass('visible')){$(this).find('div.tooltip').removeAttr('style').attr('style',getTooltipPopupPosition($(this))).addClass(' visible');}else{$(this).find('div.tooltip').removeAttr('style').removeClass("visible");}}else{if($(this).attr('data-action-target')=='fancybox'){$.fancybox.open({href:decodeURIComponent($(this).attr('data-object-url')),type:'iframe',padding:0,width:'80%',height:'80%',helpers:{overlay:{locked:false}}});}else{window.location.href=decodeURIComponent($(this).attr('data-object-url'));}}});}
     if(businessviewJson.details.modules){if(businessviewJson.details.modules.googleAnalytics){var googleAnalytics=businessviewJson.details.modules.googleAnalytics;if(googleAnalytics.tracking){if(checkIfAnalyticsLoaded(googleAnalytics.code)){$('#businessview-actions-canvas').on('click','li',function(){ga('send','event','BusinessView Actions','click',$(this).text());});$('#businessview-areas-canvas').on('click','li',function(){ga('send','event','BusinessView Areas','click',$(this).text());});var viewportToggle=false;if(isInViewport(businessviewCanvasSelector)&&!viewportToggle){ga('send','event','BusinessView Canvas','scroll','in-viewport');viewportToggle=true;}
         $(window).scroll(function(){if(isInViewport(businessviewCanvasSelector)&&!viewportToggle){ga('send','event','BusinessView Canvas','scroll','in-viewport');viewportToggle=true;}
@@ -365,7 +387,21 @@ var initialize= initialize || function(businessviewJson){var panoEntry;var panoO
         if(businessviewJson.details.modules.intro){var intro=businessviewJson.details.modules.intro;if(intro.status&&(intro.headline!=""||intro.message!="")){appendIntroToBusinessview(intro.headline,intro.message,intro.backgroundColor,intro.textColor);$(businessviewCanvasSelector).on('click','div#businessview-intro-canvas i.fa-times',function(){removeBusinessviewCanvas('businessview-intro-canvas');});}}
         if(businessviewJson.details.modules.panoAnimation){var panoAnimation=businessviewJson.details.modules.panoAnimation;if(panoAnimation.jumps){var lastPano=panorama.getPano();panoJumpTimer=window.setInterval(function(){if(lastPano==panorama.getPano()){var links=panorama.getLinks();var nextPano;if(links.length>1){do{nextPano=links[getRandomInt(0,links.length-1)];}while(nextPano.pano==lastPano);lastPano=nextPano.pano;}else{nextPano=links[0];}
             panorama.setPano(nextPano.pano);}else{window.clearInterval(panoJumpTimer);}},5000);}
-            if(panoAnimation.rotation){var lastPov=panorama.getPov();panoRotationTimer=window.setInterval(function(){var pov=panorama.getPov();if(pov.heading==lastPov.heading){pov.heading+=0.015;panorama.setPov(pov);lastPov=pov;}else{window.clearInterval(panoRotationTimer);window.clearInterval(panoJumpTimer);}},30);}}
+            if(panoAnimation.rotation){
+                var lastPov=panorama.getPov();
+                if($j.type(lastPov) == "object"){
+                    panoRotationTimer=window.setInterval(function(){
+                        var pov=panorama.getPov();
+
+                        if($j.type(pov) == "object" && pov.heading==lastPov.heading){
+                            pov.heading+=0.015;panorama.setPov(pov);lastPov=pov;
+                        }else{
+                            window.clearInterval(panoRotationTimer);window.clearInterval(panoJumpTimer);
+                        }
+                    },30);
+                }
+
+            }}
         if(businessviewJson.details.modules.contact){var contact=businessviewJson.details.modules.contact;if(contactBoxHasVisibleFields(contact.fields)){appendContactToBusinessview(contact.fields,contact.backgroundColor,contact.textColor,contact.align);}
             $(businessviewCanvasSelector).on('click','div#businessview-contact-canvas div#businessview-show-contact-details',function(){$(businessviewCanvasSelector+' div#businessview-contact-canvas div#businessview-show-contact-details').hide();$(businessviewCanvasSelector+' div#businessview-contact-canvas div#businessview-contact-details').show();});$(businessviewCanvasSelector).on('click','div#businessview-contact-canvas div#businessview-contact-details i.fa-times',function(){$(businessviewCanvasSelector+' div#businessview-contact-canvas div#businessview-contact-details').hide();$(businessviewCanvasSelector+' div#businessview-contact-canvas div#businessview-show-contact-details').show();});}
         if(businessviewJson.details.modules.gallery){var gallery=businessviewJson.details.modules.gallery;if(gallery.status&&gallery.googlePlacePhotos&&gallery.googlePlacePhotos.length>0){appendGalleryToBusinessview(gallery.googlePlacePhotos);$(businessviewCanvasSelector).on('click','ul#businessview-gallery-canvas a',function(){$(businessviewCanvasSelector+' ul#businessview-gallery-canvas a').fancybox({type:'image',padding:0,helpers:{overlay:{locked:false},thumbs:{width:50,height:50}},});});}}
@@ -673,42 +709,56 @@ var request=$.ajax({url:'https://graph.facebook.com/'+pageId+'/albums?access_tok
                 });
         });*/
 }
-$j('[data-toggle="ajaxModal"]').on('click',
-    function(e) {
-        $j('#ajaxModal').remove();
-        e.preventDefault();
-        var $this = $j(this)
-            , $remote = $this.data('src') || $this.attr('href')
-            , $modal = $('<div class="modal fade" id="ajaxModal" tabindex="-1" role="dialog" aria-hidden="true">\n' +
-            '  <div class="modal-dialog modal-lg">\n' +
-            '    <div class="modal-content">\n' +
-            '      <div class="modal-header">\n' +
-            '        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' +
-            '        <h4 class="modal-title" id="myModalLabel">'+$this.text()+'</h4>\n' +
-            '      </div>\n' +
-            '      <div class="modal-body">\n' +
-            '        ...\n' +
-            '      </div>\n' +
-            '      <div class="modal-footer">\n' +
-            '      </div>\n' +
-            '    </div>\n' +
-            '  </div>\n' +
-            '</div>');
+window.tp3_app.controls = window.tp3_app.controls || function(){
+    $j('input[type="checkbox"]').each(function(){
+        $j(this).insertBefore($j(this).parent('label'))
+    })
+    $j('.ajaxModal, [data-toggle="ajaxModal"]').addClass("btn-default").on('click',
+        function(e) {
+            $j('#ajaxModal').remove();
+            e.preventDefault();
+            var $this = $j(this)
+                , $remote = $this.data('src') || $this.attr('href') + "?type=1000 #content"
+                , $modal = $('<div class="modal fade" id="ajaxModal" tabindex="-1" role="dialog" aria-hidden="true">\n' +
+                '  <div class="modal-dialog modal-lg">\n' +
+                '    <div class="modal-content">\n' +
+                '      <div class="modal-header">\n' +
+                '        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' +
+                '        <h4 class="modal-title" id="myModalLabel">'+$this.text()+'</h4>\n' +
+                '      </div>\n' +
+                '      <div class="modal-body"><div class="loader"></div>\n' +
+                '        ...\n' +
+                '      </div>\n' +
+                '      <div class="modal-footer">\n' +
+                '      </div>\n' +
+                '    </div>\n' +
+                '  </div>\n' +
+                '</div>');
 
-        $j('body').append($modal);
-        $modal.modal({ keyboard: true});
-        $modal.find(".modal-body").css({padding:"20px 10px 0 10px"}).load($remote , function () {
-            $j('form[name="anfordern"]').autosubmit({
-                "request": "data"
+            $j('body').append($modal);
+            $modal.modal({ keyboard: true});
+            $modal.find(".modal-body").css({padding:"20px 10px 0 10px"}).load($remote , function () {
+                $j('form[name="anfordern"]').autosubmit({
+                    "request": "data"
+                });
+                $modal.find('input[type="checkbox"]').each(function(){
+                    var tgt =  $j(this).prev('input[type="hidden"]');
+                    $j(this).insertBefore($j(this).parent('label')).on("change",function(){
+                        $j(tgt).val($j(this).val());
+                    })
+
+                })
+            });
+
+            // Fill modal with content from link href
+            $("#ajaxModal").on("show.bs.modal", function(e) {
+                //var link = $(e.relatedTarget);
+                //	$(this).find(".modal-body").load($remote+"?type=1000" );
             });
         });
+    console.log("controls");
+}
 
-// Fill modal with content from link href
-        $("#ajaxModal").on("show.bs.modal", function(e) {
-            //var link = $(e.relatedTarget);
-            //	$(this).find(".modal-body").load($remote+"?type=1000" );
-        });
-    });
 
 
 function onRequestCompleted(xhr,textStatus) {
@@ -717,68 +767,47 @@ function onRequestCompleted(xhr,textStatus) {
         console.log("302");
     }
 }
+
 $j.fn.autosubmit = function(options) {
+
     $j.extend(this, options)
     $j(this).on("submit",function(event) {
+        var form = $j(this);
         $j.ajaxSetup({complete: onRequestCompleted});
+        var values = $j(form).find('select')
+            .add(  $j(form).find('input[type!=checkbox]') )
+            .add(  $j(form).find('textarea') )
+            .serialize();
+        // add values for checked and unchecked checkboxes fields
+        $j(form).find('input[type=checkbox]').each(function() {
+            var chkVal = $j(this).is(':checked') ? $j(this).val() : "0";
+            values += "&" + $j(this).attr('name') + "=" + chkVal;
+        });
+        $j(form).find('input[type="file"]').each(function() {	 values += "&" + $j(this).attr('name') + "=" + $j(this).val()})
 
-        var form = $(this);
-        $.ajax({
+        $j.ajax({
             type: form.attr('method'),
-            url: $j.type(options) == "object" ? form.attr('action') : form.attr('action').toString() ,
-            data: form.serializeWithChkBox(),
+            url: form.attr('action').toString(),
+            data: values,
             async: true,
             success: function(data) {
                 console.log(data);
-                var data_txt = $j(data);
-
-                $j(data_txt).each(function(){
-                    if(this.tagName == "script" || this.tagName == "SCRIPT"){
-
-
-                        if(this.src != undefined){
-
-
-                            /* $j.getScript(this.src, function(datax, textStatus, jqxhr) {
-                                console.log(this, datax); //data returned
-                               var sc = $j('<script/>', {
-                                  language: 'JavaScript',
-                               text: datax != undefined && datax != '' ? datax : '',
-                                }).appendTo('head');
-                                console.log(textStatus); //success
-                                console.log(jqxhr.status); //200
-                                console.log('Load was performed.');
-                              });
-                              console.log(this)  */
-                        }
-                        else{
-                            var str = $j(this).text();
-                            var regex = /window.history.back()/gi;
-                            var sc = $j('<script/>', {
-                                language: 'JavaScript',
-                                text: str.replace(regex, "<!-- cut -->")
-                            }).appendTo('head');
-                        }
-                    }
-
-                }) // app.contentload(data)
-                form.html( $j.type(options) == "object" ?  data : $j('#main',data))
-                $j('#main', form).slideDown()
-                window.location.hash = $j.type(options) == "object" ? form.attr('action') : form.attr('action').toString()
-                if($j.type(app.ajax_renderer) == "function") app.ajax_renderer();
-                $j('body').trigger("loaded");
+                form.hide();
+                $j(data).insertAfter(form);
+                // window.tp3_app.scriptsload(data);
+                $j(document).trigger("loaded");
 
             },
         }).done(function() {
             // Optionally alert the user of success here...
             //$j('#col3_content').html($j(event.target).html())
-            $j('body').trigger("loaded");
-            // ga('send', 'event', 'form', 'submit', 'nav-buttons');
+            //  $j(document).trigger("loaded");
+
         }).fail(function() {
             // Optionally alert the user of an error here...
             alert('error')
         });
-        return false;
+        event.preventDefault();
     });
 }
 
@@ -796,3 +825,112 @@ $.fn.serializeWithChkBox = function() {
     $(this).find('input[name="cmd"]').each(function() {	 values += "&" + $(this).attr('name') + "=" + $(this).val()})
     return values;
 }
+
+var canvasDots = function() {
+    //   var canvas = $j('.connecting-dots').length < 1 ? $j('<canvas class="connecting-dots"></canvas>').prependTo($('#content').first()).hide() : $j('.connecting-dots');
+    var canvas = document.querySelector('canvas'),
+        ctx = canvas.getContext('2d'),
+        colorDot = 'rgba(2,2,2,0.1)',
+        color = '#ccc';
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    canvas.style.display = 'block';
+    ctx.fillStyle = colorDot;
+    ctx.lineWidth = .1;
+    ctx.strokeStyle = color;
+
+    var mousePosition = {
+        x: 30 * canvas.width / 100,
+        y: 30 * canvas.height / 100
+    };
+
+    var dots = {
+        nb: 600,
+        distance: 60,
+        d_radius: 100,
+        array: []
+    };
+
+    function Dot(){
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+
+        this.vx = -.5 + Math.random();
+        this.vy = -.5 + Math.random();
+
+        this.radius = Math.random();
+    }
+
+    Dot.prototype = {
+        create: function(){
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+            ctx.fill();
+        },
+
+        animate: function(){
+            for(i = 0; i < dots.nb; i++){
+
+                var dot = dots.array[i];
+
+                if(dot.y < 0 || dot.y > canvas.height){
+                    dot.vx = dot.vx;
+                    dot.vy = - dot.vy;
+                }
+                else if(dot.x < 0 || dot.x > canvas.width){
+                    dot.vx = - dot.vx;
+                    dot.vy = dot.vy;
+                }
+                dot.x += dot.vx;
+                dot.y += dot.vy;
+            }
+        },
+
+        line: function(){
+            for(i = 0; i < dots.nb; i++){
+                for(j = 0; j < dots.nb; j++){
+                    i_dot = dots.array[i];
+                    j_dot = dots.array[j];
+
+                    if((i_dot.x - j_dot.x) < dots.distance && (i_dot.y - j_dot.y) < dots.distance && (i_dot.x - j_dot.x) > - dots.distance && (i_dot.y - j_dot.y) > - dots.distance){
+                        if((i_dot.x - mousePosition.x) < dots.d_radius && (i_dot.y - mousePosition.y) < dots.d_radius && (i_dot.x - mousePosition.x) > - dots.d_radius && (i_dot.y - mousePosition.y) > - dots.d_radius){
+                            ctx.beginPath();
+                            ctx.moveTo(i_dot.x, i_dot.y);
+                            ctx.lineTo(j_dot.x, j_dot.y);
+                            ctx.stroke();
+                            ctx.closePath();
+                        }
+                    }
+                }
+            }
+        }
+    };
+
+    function createDots(){
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for(i = 0; i < dots.nb; i++){
+            dots.array.push(new Dot());
+            dot = dots.array[i];
+
+            dot.create();
+        }
+
+        dot.line();
+        dot.animate();
+    }
+
+    window.onmousemove = function(parameter) {
+        mousePosition.x = parameter.pageX;
+        mousePosition.y = parameter.pageY;
+    }
+
+    mousePosition.x = window.innerWidth / 2;
+    mousePosition.y = window.innerHeight / 2;
+
+    setInterval(createDots, 1000/30);
+};
+/*
+window.onload = function() {
+    //canvasDots();
+};
+*/

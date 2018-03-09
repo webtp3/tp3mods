@@ -57,7 +57,7 @@ class Handler extends ErrorHandler {
     {
         //parent::__construct($errorHandlerErrors);
         try{
-            GeneralUtility::devLog('Handler Init', self::class);
+           // GeneralUtility::devLog('Handler Init', self::class);
 
         }
         catch (\TYPO3\CMS\Core\Exception $exception){
@@ -75,7 +75,7 @@ class Handler extends ErrorHandler {
         public function processError($errorHandlerErrors) {
 
             try {
-                GeneralUtility::devLog('Process Start ', self::class);
+             //   GeneralUtility::devLog('Process Start ', self::class);
 
             }
             catch(\TYPO3\CMS\Extbase\Property\Exception $e) {

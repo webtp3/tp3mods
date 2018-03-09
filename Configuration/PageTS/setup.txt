@@ -111,9 +111,25 @@ RTE.classes {
     btn-block {
         name = LLL:EXT:tp3mods/Resources/Private/Language/locallang_rte.xlf:class.btn-block
     }
-    ajaxModal {
-        name = AjaxModal (Popup Request)
+    folder{
+        name = Folder
     }
+    mail{
+        name = Email
+    }
+    download{
+        name = Download
+    }
+    ajaxModal{
+        name = Ajax Popup
+    }
+    ajaxModal btn-primary{
+        name = Ajax Popup2
+    }
+    popupModal{
+        name = Popup
+    }
+
 }
 
 ################################################
@@ -317,7 +333,7 @@ RTE.default.proc.entryHTMLparser_db {
         ol.fixAttrib.class.list     = list-unstyled, list-inline
         ul.fixAttrib.class.list     = list-unstyled, list-inline
 
-        a.fixAttrib.class.list      = btn, btn-default, btn-primary, btn-success, btn-warning, btn-danger, btn-link, btn-block,folder,mail,download,ajaxModal,popupModal,btn-secondary
+        a.fixAttrib.class.list      = btn, btn-default, btn-primary, btn-success, btn-warning, btn-danger, btn-link, btn-block
 
         // Disallow all attributes
         hr.allowedAttribs           = 0
@@ -442,10 +458,6 @@ RTE.default.enableWordClean = 1
 RTE.default.enableWordClean.HTMLparser < RTE.default.proc.entryHTMLparser_db
 RTE.default {
 
-    # This will provide only basic tool in the text RTE
-    # preset = default
-
-
 
     buttons.link{
         page.properties.class.default  := addToList(internalLink)
@@ -458,6 +470,8 @@ RTE.default {
 
         mail.properties.class.default := addToList(mail)
 
-        properties.class.allowedClasses := addToList(internalLink,externalLink,folder,mail,download,ajaxModal,popupModal, btn, btn-default, btn-secondary)
+        properties.class.allowedClasses := addToList(internalLink,externalLink,folder,mail,download,ajaxModal,ajaxModal btn-primary,popupModal, btn, btn-primary, btn-secondary)
     }
 }
+RTE.tt_content.types.textmedia.bodytext.preset = full
+RTE.config.tx_news_domain_model_news.bodytext.preset = default
