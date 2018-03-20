@@ -1,4 +1,5 @@
 <?php
+
 return [
     'ctrl' => [
         'title'	=> 'LLL:EXT:tp3mods/Resources/Private/Language/locallang_db.xlf:tx_tp3mods_domain_model_tp3mods',
@@ -7,12 +8,20 @@ return [
         'crdate' => 'crdate',
         'cruser_id' => 'cruser_id',
 		'enablecolumns' => [
+            'disabled' => 'hidden',
             'starttime' => 'starttime',
             'endtime' => 'endtime',
         ],
-		'searchFields' => 'microdata,konfiguration,address',
-        'iconfile' => 'EXT:tp3mods/Resources/Public/Icons/tx_tp3mods_domain_model_tp3mods.gif'
+        'origUid' => 't3_origuid',
+        'hideAtCopy' => true,
+        'prependAtCopy' => 'LLL:EXT:lang/Resources/Private/Language/locallang_general.xlf:LGL.prependAtCopy',
+        'searchFields' => 'microdata,konfiguration,address',
+        'iconfile' => 'EXT:tp3mods/Resources/Public/Icons/user_plugin_tp3micro.svg',
+        'typeicon_classes' => [
+            'default' => 'plugin-tp3mods-tp3config'
+        ],
     ],
+
     'interface' => [
 		'showRecordFieldList' => 'microdata, konfiguration, address',
     ],
@@ -22,24 +31,30 @@ return [
     'columns' => [
 		'starttime' => [
             'exclude' => true,
-            'l10n_mode' => 'mergeIfNotBlank',
             'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.starttime',
             'config' => [
                 'type' => 'input',
                 'size' => 13,
                 'eval' => 'datetime',
+                'renderType' => 'inputDateTime',
+                'behaviour' => [
+                    'allowLanguageSynchronization' => true,
+                ],
                 'default' => 0,
             ]
         ],
         'endtime' => [
             'exclude' => true,
-            'l10n_mode' => 'mergeIfNotBlank',
             'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.endtime',
             'config' => [
                 'type' => 'input',
                 'size' => 13,
                 'eval' => 'datetime',
                 'default' => 0,
+                'renderType' => 'inputDateTime',
+                'behaviour' => [
+                    'allowLanguageSynchronization' => true,
+                ],
                 'range' => [
                     'upper' => mktime(0, 0, 0, 1, 1, 2038)
                 ]
@@ -84,6 +99,7 @@ return [
 	    ],
     ],
 ];
+/*
 // Configure the default backend fields for the content element
 $GLOBALS['TCA']['tt_content']['types']['tp3mods_downloads'] = array(
     'showitem' => '
@@ -95,4 +111,4 @@ $GLOBALS['TCA']['tt_content']['types']['tp3mods_downloads'] = array(
          --palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xml:palette.visibility;visibility,
          --palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xml:palette.access;access,
       --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xml:tabs.extended
-');
+');*/

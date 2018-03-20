@@ -16,7 +16,6 @@ mod.wizards.newContentElement.wizardItems.common {
 #### Get a clean start without the need of  ####
 #### of overriding everything               ####
 ################################################
-RTE >
 
 ################################################
 #### RTE CLASSES                            ####

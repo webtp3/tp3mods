@@ -1,6 +1,6 @@
 <?php
 defined('TYPO3_MODE') || die();
-
+return;
 /***************
  * Add Content Element
  */

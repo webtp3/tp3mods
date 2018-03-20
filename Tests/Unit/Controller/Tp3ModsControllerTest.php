@@ -37,7 +37,7 @@ class Tp3ModsControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $tp3ModsRepository = $this->getMockBuilder(\::class)
+        $tp3ModsRepository = $this->getMockBuilder(Tp3Mods::class)
             ->setMethods(['findAll'])
             ->disableOriginalConstructor()
             ->getMock();
@@ -86,7 +86,7 @@ class Tp3ModsControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
     {
         $tp3Mods = new \Tp3\Tp3mods\Domain\Model\Tp3Mods();
 
-        $tp3ModsRepository = $this->getMockBuilder(\::class)
+        $tp3ModsRepository = $this->getMockBuilder(Tp3Mods::class)
             ->setMethods(['update'])
             ->disableOriginalConstructor()
             ->getMock();

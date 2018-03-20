@@ -97,7 +97,7 @@
             "sourceLanguage": "en",
             "state": "beta",
             "targetVersion": "7.6.0-8.9.99",
-            "version": "1.0.2"
+            "version": "1.0.5"
         },
         "extensionKey": "tp3mods",
         "name": "tp3 Mods",

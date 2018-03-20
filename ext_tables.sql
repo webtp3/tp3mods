@@ -21,3 +21,4 @@ CREATE TABLE tx_tp3mods_domain_model_tp3mods (
 	KEY parent (pid),
 
 );
+
