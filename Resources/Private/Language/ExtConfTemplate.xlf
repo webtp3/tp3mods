@@ -13,12 +13,15 @@
             <trans-unit id="pageTs.disablePageTs">
                 <source>Enable this to enable Debug for this extension.</source>
             </trans-unit>
-            <trans-unit id="feature.debugMode">
+            <trans-unit id="pageTs.debugMode">
                 <source>Enable this to enable Debug for this extension.</source>
             </trans-unit>
-            <trans-unit id="feature.backendModule">
+            <trans-unit id="pageTs.backendModule">
                 <source>Show Backendmodule for configuration.</source>
             </trans-unit>
+            <trans-unit id="pageTs.EnableCookieConsent">
+                 <source>enable Cookie Consent</source>
+             </trans-unit>
         </body>
     </file>
 </xliff>

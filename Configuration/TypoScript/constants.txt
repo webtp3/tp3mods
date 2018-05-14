@@ -13,7 +13,44 @@ plugin.tx_tp3mods_tp3micro{
     storagePid =
   }
 }
-
+plugin.tx_tp3mods_tp3micro{
+  privacyProtect = 1
+  privacyPid = {$privacyPid}
+  settings{
+      # cat=plugin.tx_tp3mods_tp3micro/settings; type=string; label=Analytics Account
+      account = {$page.tracking.google.trackingID}
+      # cat=plugin.tx_tp3mods_tp3micro/settings; type=boolean; label=anonymized
+      anonymized = 1
+      # cat=plugin.tx_tp3mods_tp3micro/settings; type=boolean; label=demographics (Display Feature)
+      demographics = 0
+      # cat=plugin.tx_tp3mods_tp3micro/settings; type=boolean; label=trackpageload
+      trackpageload = 0
+      # cat=plugin.tx_tp3mods_tp3micro/settings; type=boolean; label=inpagelinkid
+      inpagelinkid = 0
+      # cat=plugin.tx_tp3mods_tp3micro/settings; type=boolean; label=doubleclick
+      doubleclick = 0
+      # cat=plugin.tx_tp3mods_tp3micro/settings; type=string; label=UAdualtag
+      UAdualtag = 0
+      # cat=plugin.tx_tp3mods_tp3micro/settings; type=boolean; label=bouncerate
+      bouncerate = 0
+      # cat=plugin.tx_tp3mods_tp3micro/settings; type=boolean; label=trackexternal
+      trackexternal = 1
+      # cat=plugin.tx_tp3mods_tp3micro/settings; type=options[universal=universal,mobile=mobile,sync=sync,async=async]; label=type
+      type = async
+      # cat=plugin.tx_tp3mods_tp3micro/settings; type=boolean; label=optout
+      optout = 1
+      # cat=plugin.tx_tp3mods_tp3micro/settings; type=string; label=_setDomainName
+      _setDomainName = {$baseUrl}
+      # cat=plugin.tx_tp3mods_tp3micro/settings; type=string; label=optout.disablefunction
+      optout.disablefunction = 0
+      # cat=plugin.tx_tp3mods_tp3micro/settings; type=boolean; label=trackfiles
+      trackfiles = 1
+      # cat=plugin.tx_tp3mods_tp3micro/settings; type=string; label=path
+      path = fileadmin
+      # cat=plugin.tx_tp3mods_tp3micro/settings; type=boolean; label=cookieconsent
+      cookieconsent=
+    }
+}
 module.tx_tp3mods_tp3backend{
   view{
     # cat=module.tx_tp3mods_tp3backend/file; type=string; label=Path to template root (BE)

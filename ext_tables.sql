@@ -22,3 +22,12 @@ CREATE TABLE tx_tp3mods_domain_model_tp3mods (
 
 );
 
+#
+# Table structure for table 'tt_address'
+#
+CREATE TABLE tt_address (
+
+  tx_cal_controller_latitude tinytext DEFAULT  '0'  NOT NULL,
+	tx_cal_controller_longitude tinytext DEFAULT  '0' NOT NULL,
+
+);

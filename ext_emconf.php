@@ -22,20 +22,21 @@ $EM_CONF[$_EXTKEY] = [
     'uploadfolder' => '0',
     'createDirs' => '',
     'clearCacheOnLoad' => 0,
-    'version' => '1.0.7',
+    'version' => '1.0.10',
+    'author_company' => 'tp3',
     'constraints' =>
         array (
             'depends' =>
                 array (
-                    'typo3' => '7.6.0-8.9.99',
-
+                    'typo3' => '8.7.0-9.0.99',
+                    'bootstrap_package' => '8.0.0-8.9.99',
                 ),
             'conflicts' =>
                 array (
+
                 ),
             'suggests' =>
                 array (
-                    'bootstrap_package' => '8.0.0-8.9.99',
                 ),
         ),
     'autoload' =>
@@ -45,6 +46,5 @@ $EM_CONF[$_EXTKEY] = [
                     'Tp3\\Tp3mods\\' => 'Classes',
                 ),
         ),
-    'clearcacheonload' => false,
-    'author_company' => 'tp3',
+
 ];

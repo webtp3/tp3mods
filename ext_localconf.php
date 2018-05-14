@@ -1,6 +1,7 @@
 <?php
 defined('TYPO3_MODE') || die('Access denied.');
 
+$_EXTKEY = "tp3mods";
 
     /***************
      * Make the extension configuration accessible
@@ -40,6 +41,10 @@ defined('TYPO3_MODE') || die('Access denied.');
      //   $GLOBALS["TYPO3_CONF_VARS"]['EXTCONF']['realurl']['_DEFAULT']['pagePath']['rootpage_id'] = 0;
      //   $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['checkAlternativeIdMethods-PostProc']['realurl'] = 'Tp3\\Tp3mods\\Exception\\Error404->pageNotFound';
 // wizards
+
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_pagerenderer.php']['render-postProcess'][] = \Tp3\Tp3mods\Hooks\GoogleAnalyticsFehook::class .'->intPages';
+$GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['consent'] = \Tp3\Tp3mods\Hooks\GoogleAnalyticsFehook::class .'->setTracking';//Tp3\Tp3ratings\Controller\RatingsdataController::class . '->RatingAction';//
+
 
 
         \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPageTSConfig(
@@ -82,16 +87,15 @@ defined('TYPO3_MODE') || die('Access denied.');
     /***************
      * Add default RTE configuration for tp3mods
      */
-    if (!$tp3modsConfig['disableConfigRTE']) {
+    if (!$tp3modsConfig['disableConfigRTE'] == 0 || $tp3modsConfig['disableConfigRTE'] == false) {
         $GLOBALS['TYPO3_CONF_VARS']['RTE']['Presets']['bootstrap'] = 'EXT:tp3mods/Configuration/RTE/Default.yaml';
     }
-    if (!$tp3modsConfig['disablePageTs']) {
+    if (!$tp3modsConfig['disablePageTs'] == 0 || $tp3modsConfig['disablePageTs'] == false) {
         \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPageTSConfig('<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/PageTS/setup.txt">');
     }
 
 
     if (TYPO3_MODE == 'BE') {
-
 
         /***************
          * Register Icons
@@ -121,23 +125,9 @@ defined('TYPO3_MODE') || die('Access denied.');
      * Please see \BK2K\BootstrapPackage\Service\BrandingService for CMS9
      */
     if (TYPO3_MODE == 'BE' && !class_exists('TYPO3\CMS\Core\Configuration\ExtensionConfiguration')) {
-        if ($tp3modsConfig['backendModule']) {
-            \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
-                'Tp3.Tp3mods',
-                'tools', // Make module a submodule of 'tools'
-                'tp3backend', // Submodule key
-                '', // Position
-                [
-                    'Tp3Mods' => 'list, show, edit, update',
-                ],
-                [
-                    'access' => 'user,group',
-                    'icon' => 'EXT:' . $_EXTKEY . '/Resources/Public/Icons/user_mod_tp3backend.svg',
-                    'labels' => 'LLL:EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang_tp3backend.xlf',
-                ]
-            );
-        }
-        if (!$tp3modsConfig['disablePageTs']) {
+
+
+        if (!$tp3modsConfig['disablePageTsBackendLogo'] == 0 || $tp3modsConfig['disablePageTsBackendLogo'] == false) {
             /**
              * Configure Backend Extension
              */
@@ -169,3 +159,17 @@ defined('TYPO3_MODE') || die('Access denied.');
             }
         }
     }
+
+
+/*
+ * Hook for HTML-modification on the page
+ **/
+/*
+ * hook is called after Caching!
+ * => for modification of pages with COA_/USER_INT objects.
+ **/
+/*
+ * hook is called before Caching!
+ * => for modification of pages on their way in the cache.
+ **/
+//$TYPO3_CONF_VARS['SC_OPTIONS']['tslib/class.tslib_fe.php']['contentPostProc-all'][] = \Tp3\Tp3mods\Hooks\GoogleAnalyticsFehook::class .'->noIntPages';
