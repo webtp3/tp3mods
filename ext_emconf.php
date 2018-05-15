@@ -17,12 +17,12 @@ $EM_CONF[$_EXTKEY] = [
     'author' => 'Thomas Ruta',
     'author_email' => 'email@thomasruta.de',
     'author_company' => 'tp3',
-    'state' => 'alpha',
+    'state' => 'beta',
     'internal' => '',
     'uploadfolder' => '0',
     'createDirs' => '',
     'clearCacheOnLoad' => 0,
-    'version' => '1.0.10',
+    'version' => '1.1.1',
     'author_company' => 'tp3',
     'constraints' =>
         array (

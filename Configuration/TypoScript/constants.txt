@@ -17,6 +17,14 @@ plugin.tx_tp3mods_tp3micro{
   privacyProtect = 1
   privacyPid = {$privacyPid}
   settings{
+      # cat=plugin.tx_tp3mods_tp3micro/settings; type=boolean; label=include Tp3App
+      Tp3App = 1
+      # cat=plugin.tx_tp3mods_tp3micro/settings; type=boolean; label=include glyphicons
+      glyphicons = 1
+      # cat=plugin.tx_tp3mods_tp3micro/settings; type=boolean; label=include awesomeicons
+      awesomeicons = 1
+      # cat=plugin.tx_tp3mods_tp3micro/settings; type=boolean; label=include Tp3Css
+      Tp3Css = 1
       # cat=plugin.tx_tp3mods_tp3micro/settings; type=string; label=Analytics Account
       account = {$page.tracking.google.trackingID}
       # cat=plugin.tx_tp3mods_tp3micro/settings; type=boolean; label=anonymized

@@ -73,15 +73,15 @@ plugin.tx_tp3mods._CSS_DEFAULT_STYLE (
 # Module configuration
 module.tx_tp3mods_tools_tp3modstp3backend {
     persistence {
-        storagePid = module.tx_tp3mods_tp3backend.persistence.storagePid
+        storagePid = {$module.tx_tp3mods_tp3backend.persistence.storagePid}
     }
     view {
         templateRootPaths.0 = EXT:tp3mods/Resources/Private/Backend/Templates/
-        templateRootPaths.1 = module.tx_tp3mods_tp3backend.view.templateRootPath
+        templateRootPaths.1 = {$module.tx_tp3mods_tp3backend.view.templateRootPath}
         partialRootPaths.0 = EXT:tp3mods/Resources/Private/Backend/Partials/
-        partialRootPaths.1 = module.tx_tp3mods_tp3backend.view.partialRootPath
+        partialRootPaths.1 = {$module.tx_tp3mods_tp3backend.view.partialRootPath}
         layoutRootPaths.0 = EXT:tp3mods/Resources/Private/Backend/Layouts/
-        layoutRootPaths.1 = module.tx_tp3mods_tp3backend.view.layoutRootPath
+        layoutRootPaths.1 = {$module.tx_tp3mods_tp3backend.view.layoutRootPath}
     }
 }
 lib.fluidContent {
@@ -101,17 +101,38 @@ tt_content {
         templateName = Tp3Downloads.html
     }
 }
-page.includeCSS{
-    tp3_app = EXT:tp3mods/Resources/Public/Css/tp3_app.css
 
-}
-page.includeJSFooterlibs {
+[globalVar = LIT:1 = {$plugin.tx_tp3mods_tp3micro.settings.Tp3App}]
+    page.includeJSFooterlibs {
 
-    tp3_app >
-    tp3_app = EXT:tp3mods/Resources/Public/JavaScript/tp3_app.js
-    tp3_app.async = 1
-}
-[globalVar = LIT:1 = {$privacyProtect}]
+        tp3_app >
+        tp3_app = EXT:tp3mods/Resources/Public/JavaScript/tp3_app.js
+        tp3_app.async = 1
+    }
+[end]
+[globalVar = LIT:1 = {$plugin.tx_tp3mods_tp3micro.settings.glyphicons}]
+    page.includeCSS {
+        glyphicons = EXT:tp3mods/Resources/Public/Css/tp3_glyphicons.css
+        glyphicons.async = 1
+
+    }
+[end]
+[globalVar = LIT:1 = {$plugin.tx_tp3mods_tp3micro.settings.awesomeicons}]
+    page.includeCSS {
+        awesomeicons = EXT:tp3mods/Resources/Public/Css/tp3_awesomeicons.css
+        awesomeicons.async = 1
+
+    }
+[end]
+[globalVar = LIT:1 = {$plugin.tx_tp3mods_tp3micro.settings.Tp3Css}]
+    page.includeCSS {
+        tp3_app = EXT:tp3mods/Resources/Public/Css/tp3_app.css
+        tp3_app.async = 1
+
+    }
+[end]
+
+[globalVar = LIT:1 = {$plugin.tx_tp3mods_tp3micro.privacyProtect}]
 
     page.includeJSFooterlibs {
 
@@ -187,13 +208,16 @@ var btn = $('<button/>',{id :"cookieconsent-open", class:"btn fa fa-eye"}).appen
 
 $('#cookieconsent-open').click(function (e) {
     //log("Calling <em>open()</em>");
-    p.toggle();
+    p.open();
 });
 
 
 </script>
     )
-
+    /*
+    add cookieconsent
+    */
+    page.footerData.555 < lib.cookieconsent
 [end]
 /*
 tt_content {
@@ -209,4 +233,7 @@ useHere = theConfigurationOfTheDataProcessor
 }
 }
 */
-page.footerData.555 < lib.cookieconsent
+/*
+remove analytics from bootstrap_package
+*/
+page.jsFooterInline.10 >
