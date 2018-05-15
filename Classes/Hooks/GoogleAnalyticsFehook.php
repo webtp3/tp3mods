@@ -14,8 +14,12 @@ namespace Tp3\Tp3mods\Hooks;
  * The TYPO3 project - inspiring people to share!
  */
 
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\SingletonInterface;
-
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /***************************************************************
 *  Copyright notice
@@ -72,21 +76,25 @@ class GoogleAnalyticsFehook extends \Tp3\Tp3mods\Hooks\GoogleAnalytics implement
         }
 	}
     /**
-     * Modification for pages that doesn't get cached (COA_/USER_INT)
-     * @param array $feuser
-     * @param boolean $choise
-     * @return string
+     * Ajax handler to cookie consent.
+     *
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     * @return ResponseInterface
      */
-    function setTracking($choise) {
+    function setTracking(ServerRequestInterface $request, ResponseInterface $response) {
 
         $config = isset($GLOBALS['TSFE']->tmpl->setup) ? $GLOBALS['TSFE']->tmpl->setup : [];
         if (is_array($config)
         ) {    // $tx_wegoogleanalytics = new tx_wegoogleanalytics();
             //$tx_wegoogleanalytics = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\Tp3\Tp3mods\Hooks\);
-            $GLOBALS ['TSFE']->fe_user->setKey ('fe_user', 'tracking', intval($choise));
+            $tracking = $request->getQueryParams();
+           if(!$GLOBALS['TSFE'] instanceof \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController)$this->getTypoScriptFrontendController();
+            $GLOBALS ['TSFE']->fe_user->setKey ('ses', 'tracking', intval($tracking["choise"]));
             $GLOBALS ['TSFE']->storeSessionData ();
-           // $params = $this->process($params);
-            // $params =   $this->main($params, $config["lib."]["tp3mods."]);
+            $user = \GuzzleHttp\json_encode($GLOBALS["TSFE"]->fe_user->user);
+            $response->getBody()->write($user);
+            return $response;
         }
     }
 	/**
@@ -107,6 +115,30 @@ class GoogleAnalyticsFehook extends \Tp3\Tp3mods\Hooks\GoogleAnalytics implement
 
         }
 	}
+
+    /**
+     * Initialize the typoscript frontend controller
+     *
+     * @param int $pid
+     *
+     * @return void
+     */
+    private function getTypoScriptFrontendController($pid = 1)
+    {
+        /** @var \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController $frontend */
+        $frontend = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+            \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController::class,
+            null,
+            $pid,
+            0
+        );
+        $GLOBALS['TSFE'] = $frontend;
+        $frontend->connectToDB();
+        $frontend->initFEuser();
+       // $frontend->determineId();
+      //  $frontend->initTemplate();
+      //  $frontend->getConfigArray();
+    }
 }
 /*
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/we_google_analytics/class.tx_wegoogleanalytics_fehook.php']) {

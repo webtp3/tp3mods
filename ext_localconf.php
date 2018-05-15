@@ -34,16 +34,20 @@ $_EXTKEY = "tp3mods";
             'Tp3Mods' => 'update'
         ]
     );
-// Register for hook to show preview of tt_content element of CType="tp3mods_downloads" in page module
-  //      $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms/layout/class.tx_cms_layout.php']['tt_content_drawItem']['tp3mods_downloads'] =            \Tp3\Tp3mods\Hooks\PageLayoutView\Downloads::class;
+        // Register for hook to show preview of tt_content element of CType="tp3mods_downloads" in page module
+         //      $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms/layout/class.tx_cms_layout.php']['tt_content_drawItem']['tp3mods_downloads'] =            \Tp3\Tp3mods\Hooks\PageLayoutView\Downloads::class;
 
     //    $GLOBALS["TYPO3_CONF_VARS"]['EXTCONF']['realurl']['_DEFAULT'] = $TYPO3_CONF_VARS['EXTCONF']['realurl']['_DEFAULT'];
      //   $GLOBALS["TYPO3_CONF_VARS"]['EXTCONF']['realurl']['_DEFAULT']['pagePath']['rootpage_id'] = 0;
      //   $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['checkAlternativeIdMethods-PostProc']['realurl'] = 'Tp3\\Tp3mods\\Exception\\Error404->pageNotFound';
-// wizards
 
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_pagerenderer.php']['render-postProcess'][] = \Tp3\Tp3mods\Hooks\GoogleAnalyticsFehook::class .'->intPages';
-$GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['consent'] = \Tp3\Tp3mods\Hooks\GoogleAnalyticsFehook::class .'->setTracking';//Tp3\Tp3ratings\Controller\RatingsdataController::class . '->RatingAction';//
+
+        if (!$tp3modsConfig['cookieconsent'] == 0 || $tp3modsConfig['cookieconsent'] == false){
+            $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_pagerenderer.php']['render-postProcess'][] = \Tp3\Tp3mods\Hooks\GoogleAnalyticsFehook::class .'->intPages';
+            $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['consent'] = \Tp3\Tp3mods\Hooks\GoogleAnalyticsFehook::class .'::setTracking';//Tp3\Tp3ratings\Controller\RatingsdataController::class . '->RatingAction';//
+        }
+
+
 
 
 
@@ -83,7 +87,6 @@ $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['consent'] = \Tp3\Tp3mods\Hooks
                 }
            }'
         );*/
-
     /***************
      * Add default RTE configuration for tp3mods
      */
@@ -160,16 +163,3 @@ $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['consent'] = \Tp3\Tp3mods\Hooks
         }
     }
 
-
-/*
- * Hook for HTML-modification on the page
- **/
-/*
- * hook is called after Caching!
- * => for modification of pages with COA_/USER_INT objects.
- **/
-/*
- * hook is called before Caching!
- * => for modification of pages on their way in the cache.
- **/
-//$TYPO3_CONF_VARS['SC_OPTIONS']['tslib/class.tslib_fe.php']['contentPostProc-all'][] = \Tp3\Tp3mods\Hooks\GoogleAnalyticsFehook::class .'->noIntPages';

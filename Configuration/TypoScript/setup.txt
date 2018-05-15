@@ -1,6 +1,4 @@
-plugin.tx_tp3mods {
 
-}
 
 plugin.tx_tp3mods_tp3micro {
     view {
@@ -103,11 +101,27 @@ tt_content {
         templateName = Tp3Downloads.html
     }
 }
-page.includeCSS.cookieconsent = //dev.tp3.de/typo3conf/ext/tp3mods/Resources/Public/Css/cookieconsent/cookieconsent.min.css
-page.includeCSS.cookieconsent.external = 1
-page.includeJSFooterlibs.cookieconsent = //dev.tp3.de/typo3conf/ext/tp3mods/Resources/Public/JavaScript/cookieconsent.min.js
-page.includeJSFooterlibs.cookieconsent.external = 1
+page.includeCSS{
+    tp3_app = EXT:tp3mods/Resources/Public/Css/tp3_app.css
+
+}
+page.includeJSFooterlibs {
+
+    tp3_app >
+    tp3_app = EXT:tp3mods/Resources/Public/JavaScript/tp3_app.js
+    tp3_app.async = 1
+}
 [globalVar = LIT:1 = {$privacyProtect}]
+
+    page.includeJSFooterlibs {
+
+        cookieconsent = EXT:tp3mods/Resources/Public/JavaScript/cookieconsent.min.js
+       #cookieconsent.external = 1
+    }
+    page.includeCSS{
+        cookieconsent = EXT:tp3mods/Resources/Public/Css/cookieconsent/cookieconsent.min.css
+        #cookieconsent.external = 1
+    }
 
     lib.cookieconsent >
     lib.cookieconsent = TEXT
@@ -151,12 +165,12 @@ var p = p || {};
             if(status == "deny"){
                     tp3_app.cookies = false;
                     gaOptout();
-                    tp3_app.privacyRequest(1);
+                    tp3_app.privacyRequest(0);
             }
             else{
                     tp3_app.cookies = true;
                     gaOptin();
-                    tp3_app.privacyRequest(0);
+                    tp3_app.privacyRequest(1);
             }
         },
         onRevokeChoice: function() {
@@ -173,7 +187,7 @@ var btn = $('<button/>',{id :"cookieconsent-open", class:"btn fa fa-eye"}).appen
 
 $('#cookieconsent-open').click(function (e) {
     //log("Calling <em>open()</em>");
-    p.open();
+    p.toggle();
 });
 
 

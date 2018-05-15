@@ -107,7 +107,7 @@ class GoogleAnalytics   {
                $GLOBALS['TSFE']->fe_user->storeSessionData();
 
            }
-           elseif ($tracking === false){
+           elseif ($tracking == 0){
 
                /*
                 * Disable tracking
@@ -144,7 +144,7 @@ class GoogleAnalytics   {
 					// Async is default
 				$content = $this->insertAsyncGaCode($con);
 			}
-		} else {
+		} else if($tracking != 0) {
 			$errorMessage = '<!--' ;
 			$errorMessage .= '     Ooops: Syntaxcheck of Google Analytics Account Number failed!' ;
 			$errorMessage .= '     Maybe misspelled entry in config.tx_tp3mods.account.' ;

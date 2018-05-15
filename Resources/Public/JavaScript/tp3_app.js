@@ -255,10 +255,9 @@ tp3_app.privacyRequest = function(choise){
             console.log("error");
         })
         .always(function (result) {
-            $('#tp3review').modal('hide')
+            console.log(result);
         });
 
-    event.preventDefault();
     return false;
 }
 
