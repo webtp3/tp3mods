@@ -99,7 +99,7 @@ class GoogleAnalytics   {
         $session =  $GLOBALS['TSFE']->fe_user->fetchUserSession();
        if($session){
            $tracking = $GLOBALS ['TSFE']->fe_user->getKey ('ses', 'tracking');
-           if($tracking === null){
+           if($tracking === null ){
                /*
                 * Init choise
                 */
@@ -107,7 +107,7 @@ class GoogleAnalytics   {
                $GLOBALS['TSFE']->fe_user->storeSessionData();
 
            }
-           elseif ($tracking == 0){
+           elseif($tracking != 1){
 
                /*
                 * Disable tracking
@@ -115,7 +115,12 @@ class GoogleAnalytics   {
                $accountCheckPassed = 0;
            }
 
+       }else{
+           session_start ();
+           $GLOBALS ['TSFE']->fe_user->setKey ('ses', 'tracking', 1);
+           $GLOBALS['TSFE']->fe_user->storeSessionData();
        }
+
         if ($accountCheckPassed) {
 			switch($this->conf['type']){
 				case 'mobile':

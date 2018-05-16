@@ -143,12 +143,14 @@ tt_content {
         cookieconsent = EXT:tp3mods/Resources/Public/Css/cookieconsent/cookieconsent.min.css
         #cookieconsent.external = 1
     }
+    state.data = TSFE:fe_user|sesData|tracking
+    state.intval = 1
 
     lib.cookieconsent >
     lib.cookieconsent = TEXT
     lib.cookieconsent.value (
 <script>
-var p = p || {};
+var p = p || {},gaOptout = gaOptout || false, gaOptin = gaOptin || false;
 
     window.cookieconsent.initialise({
         "palette": {
@@ -166,7 +168,7 @@ var p = p || {};
         "position": "bottom-right",
         "type": "opt-out",
         "content": {
-            "message": "Diese Webseite benötigt Cookies für die optimale Leistung",
+            "message": "{$plugin.tx_tp3mods_tp3micro.settings.cookieconsent}",
             "dismiss": "ok",
             "deny": "nein",
             "link": "mehr hierzu",
@@ -174,9 +176,11 @@ var p = p || {};
         },
         onPopupOpen: function() {
             console.log('<em>onPopupOpen()</em> called');
+
         },
         onPopupClose: function() {
             console.log('<em>onPopupClose()</em> called');
+
         },
         onInitialise: function (status) {
             console.log('<em>onInitialise()</em> called with status <em>'+status+'</em>');
@@ -185,12 +189,12 @@ var p = p || {};
             console.log('<em>onStatusChange()</em> called with status <em>'+status+'</em>');
             if(status == "deny"){
                     tp3_app.cookies = false;
-                    gaOptout();
+                   if(gaOptout && $.type(gaOptout) == "function") gaOptout();
                     tp3_app.privacyRequest(0);
             }
             else{
                     tp3_app.cookies = true;
-                    gaOptin();
+                    if(gaOptin && $.type(gaOptin) == "function")gaOptin();
                     tp3_app.privacyRequest(1);
             }
         },
@@ -204,11 +208,13 @@ var p = p || {};
         console.log(err);
     });
 
+
+
 var btn = $('<button/>',{id :"cookieconsent-open", class:"btn fa fa-eye"}).appendTo($('footer .footer-section-meta .frame.meta'));
 
 $('#cookieconsent-open').click(function (e) {
-    //log("Calling <em>open()</em>");
-    p.open();
+    if(p.isOpen())p.close();
+    else p.open();
 });
 
 
@@ -218,6 +224,7 @@ $('#cookieconsent-open').click(function (e) {
     add cookieconsent
     */
     page.footerData.555 < lib.cookieconsent
+
 [end]
 /*
 tt_content {
