@@ -584,9 +584,11 @@ if (document.cookie.indexOf(disableStr + '=true') > -1) {
 				$gaOptout .= "function gaOptout() {
 	document.cookie = disableStr + '=true; expires=Thu, 31 Dec 2099 23:59:59 UTC; path=/';
 	window[disableStr] = true;
+	        alert('Das Tracking ist jetzt deaktiviert'); 
+
 }" ;
                 $gaOptout .= "function gaOptin() {
-	document.cookie = enableStr + '=true; expires=Thu, 31 Dec 2099 23:59:59 UTC; path=/';
+	document.cookie = disableStr + '=true; expires=Thu, 01 Jan 1970 00:00:01 UTC; path=/';
 	window[enableStr] = true;
 }" ;
 			}

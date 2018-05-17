@@ -12,7 +12,7 @@
 
 $EM_CONF[$_EXTKEY] = [
     'title' => 'tp3 Mods',
-    'description' => '',
+    'description' => 'modifications on tp3 - incl. analytics optout',
     'category' => 'module',
     'author' => 'Thomas Ruta',
     'author_email' => 'email@thomasruta.de',
@@ -22,7 +22,7 @@ $EM_CONF[$_EXTKEY] = [
     'uploadfolder' => '0',
     'createDirs' => '',
     'clearCacheOnLoad' => 0,
-    'version' => '1.1.1',
+    'version' => '1.1.2',
     'author_company' => 'tp3',
     'constraints' =>
         array (

@@ -48,12 +48,17 @@ div.jumbotron a.btn  {
 /*
 New Bootstrap
 */
-
+header .navbar-nav {
+        float: right;
+        margin: 0;
+    }
 .footer-section-meta > .container >.frame {
     width: 33%;
     float: left;
 }
-
+div.main-section .frame{
+    padding-top: 0;
+}
 .logo > .frame{
     padding : 0;
 }
@@ -178,6 +183,10 @@ tt_address
     }
     .tx-cal-controller tr{
         display: table-row;
+    }
+    div.item.carousel-item-type {
+        padding-right: 0px;
+        padding-left: 0px;
     }
 }
 
