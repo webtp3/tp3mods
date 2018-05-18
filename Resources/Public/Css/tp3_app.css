@@ -130,6 +130,14 @@ div.main-section .frame-jumbotron [class^="col"] {
 
 .connecting-dots{position: absolute;}
 
+.modal-dialog.modal-side.modal-bottom-right {
+    right: 30px;
+    bottom: 30px;
+    position: absolute;
+}
+.modal-open .modal-side {
+    overflow: auto!important;
+}
 /*
 tt_address
 */
@@ -170,7 +178,10 @@ tt_address
     header.navbar-header-main .navbar-brand.navbar-brand-image {
         padding-top: 0;
     }
-
+    .modal-dialog.modal-side.modal-bottom-right {
+        right: 0px;
+        bottom: 0px;
+    }
     td {
         display: block;
         white-space: normal!important;

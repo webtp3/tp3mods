@@ -22,13 +22,25 @@ plugin.tx_tp3mods_tp3micro {
     privacyProtect = {$plugin.tx_tp3mods_tp3micro.privacyProtect}
     privacyPid = {$plugin.tx_tp3mods_tp3micro.privacyPid}
     settings{
+        Tp3App = {$plugin.tx_tp3mods_tp3micro.settings.Tp3App}
+        glyphicons = {$plugin.tx_tp3mods_tp3micro.settings.glyphicons}
+        awesomeicons = {$plugin.tx_tp3mods_tp3micro.settings.awesomeicons}
+        Tp3Css = {$plugin.tx_tp3mods_tp3micro.settings.Tp3Css}
         account = {$google_analytics}
         trackexternal  = {$plugin.tx_tp3mods_tp3micro.settings.trackexternal}
         anonymized = {$plugin.tx_tp3mods_tp3micro.settings.anonymized}
+        advertizing = {$plugin.tx_tp3mods_tp3micro.settings.advertizing}
+        demographics =  {$plugin.tx_tp3mods_tp3micro.settings.demographics}
+        trackpageload =  {$plugin.tx_tp3mods_tp3micro.settings.trackpageload}
+        inpagelinkid =  {$plugin.tx_tp3mods_tp3micro.settings.inpagelinkid}
+        doubleclick =  {$plugin.tx_tp3mods_tp3micro.settings.doubleclick}
+        UAdualtag =  {$plugin.tx_tp3mods_tp3micro.settings.UAdualtag}
+        bouncerate =  {$plugin.tx_tp3mods_tp3micro.settings.bouncerate}
+        trackexternal = {$plugin.tx_tp3mods_tp3micro.settings.trackexternal}
         type = {$plugin.tx_tp3mods_tp3micro.settings.type}
-        demographics = 0
-        type = universal
-        optout = 1
+        demographics = {$plugin.tx_tp3mods_tp3micro.settings.demographics}
+        type = {$plugin.tx_tp3mods_tp3micro.settings.type}
+        optout = {$plugin.tx_tp3mods_tp3micro.settings.optout}
         _setDomainName = {$baseUrl}
         optout.disablefunction = {$plugin.tx_tp3mods_tp3micro.settings.optout.disablefunction}
         optout = {$plugin.tx_tp3mods_tp3micro.settings.optout}
@@ -131,20 +143,17 @@ tt_content {
 
     }
 [end]
-
-[globalVar = LIT:1 = {$plugin.tx_tp3mods_tp3micro.privacyProtect}]
+[globalVar = LIT:1 = {$plugin.tx_tp3mods_tp3micro.settings.advertizing}]
 
     page.includeJSFooterlibs {
 
         cookieconsent = EXT:tp3mods/Resources/Public/JavaScript/cookieconsent.min.js
-       #cookieconsent.external = 1
+        #cookieconsent.external = 1
     }
     page.includeCSS{
         cookieconsent = EXT:tp3mods/Resources/Public/Css/cookieconsent/cookieconsent.min.css
         #cookieconsent.external = 1
     }
-    state.data = TSFE:fe_user|sesData|tracking
-    state.intval = 1
 
     lib.cookieconsent >
     lib.cookieconsent = TEXT
@@ -218,6 +227,53 @@ $('#cookieconsent-open').click(function (e) {
 });
 
 
+</script>
+    )
+[end]
+
+[globalVar = LIT:1 = {$plugin.tx_tp3mods_tp3micro.privacyProtect}]
+
+
+    state.data = TSFE:fe_user|sesData|tracking
+    state.intval = 1
+
+    lib.cookieconsent >
+    lib.cookieconsent = TEXT
+    lib.cookieconsent.value (
+<script>
+var p = p || {},gaOptout = gaOptout || false, gaOptin = gaOptin || false;
+
+var btn = $('<button/>',{id :"cookieconsent-open", class:"btn fa fa-eye"}).appendTo($('footer .footer-section-meta .frame.meta'));
+
+$('#cookieconsent-open').on('click',
+        function(e) {
+            $j('#privacyProtect').remove();
+            e.preventDefault();
+            var $this = $j(this)
+                , $modal = $('<div class="modal fade right " id="privacyProtect" tabindex="-1" role="dialog"  data-backdrop="false">\n' +
+                '  <div class="modal-dialog modal-side modal-bottom-right" role="document">\n' +
+                '    <div class="modal-content">\n' +
+                '      <div class="modal-header">\n' +
+                '        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' +
+                '      </div>\n' +
+                '      <div class="modal-body">{$plugin.tx_tp3mods_tp3micro.settings.cookieconsent}' +
+                '      </div>\n' +
+                '      <div class="modal-footer"> <button type="button"  id="privacyProtect_Nein" class="btn btn-default" data-dismiss="modal">Nein</button>\n' +
+                '       <button type="button" id="privacyProtect_OK" class="btn btn-primary">OK</button>\n' +
+                '      </div>\n' +
+                '    </div>\n' +
+                '  </div>\n' +
+                '</div>');
+
+            $j('body').append($modal);
+            $modal.modal({ keyboard: true});
+
+        $("#privacyProtect").on("shown.bs.modal", function(e) {
+                //var link = $(e.relatedTarget);
+                $("body").removeClass("modal-open");
+            });
+
+        })
 </script>
     )
     /*
