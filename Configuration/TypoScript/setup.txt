@@ -143,7 +143,7 @@ tt_content {
 
     }
 [end]
-[globalVar = LIT:1 = {$plugin.tx_tp3mods_tp3micro.settings.advertizing}]
+[globalVar = LIT:1 = {$plugin.tx_tp3mods_tp3micro.privacyProtect}] && [globalVar = LIT:1 = {$plugin.tx_tp3mods_tp3micro.settings.advertizing}]
 
     page.includeJSFooterlibs {
 
@@ -156,10 +156,10 @@ tt_content {
     }
 
     lib.cookieconsent >
-    lib.cookieconsent = TEXT
-    lib.cookieconsent.value (
-<script>
-var p = p || {},gaOptout = gaOptout || false, gaOptin = gaOptin || false;
+    lib.cookieconsent = COA
+    lib.cookieconsent.20 = TEXT
+    lib.cookieconsent.20.value (
+      <script>    var p = p || {},gaOptout = gaOptout || false, gaOptin = gaOptin || false;
 
     window.cookieconsent.initialise({
         "palette": {
@@ -219,36 +219,38 @@ var p = p || {},gaOptout = gaOptout || false, gaOptin = gaOptin || false;
 
 
 
-var btn = $('<button/>',{id :"cookieconsent-open", class:"btn fa fa-eye"}).appendTo($('footer .footer-section-meta .frame.meta'));
+var btn = $('<button/>',{id :"privacyPopup-open", class:"btn fa fa-eye"}).appendTo($('footer .footer-section-meta .frame.meta'));
 
-$('#cookieconsent-open').click(function (e) {
+$('#privacyPopup-open').click(function (e) {
     if(p.isOpen())p.close();
     else p.open();
 });
+
 
 
 </script>
     )
 [end]
 
-[globalVar = LIT:1 = {$plugin.tx_tp3mods_tp3micro.privacyProtect}]
+[globalVar = LIT:1 = {$plugin.tx_tp3mods_tp3micro.privacyProtect}] && [globalVar = LIT:0 = {$plugin.tx_tp3mods_tp3micro.settings.advertizing}]
 
 
-    state.data = TSFE:fe_user|sesData|tracking
-    state.intval = 1
 
     lib.cookieconsent >
-    lib.cookieconsent = TEXT
-    lib.cookieconsent.value (
-<script>
-var p = p || {},gaOptout = gaOptout || false, gaOptin = gaOptin || false;
+    lib.cookieconsent = COA
 
-var btn = $('<button/>',{id :"cookieconsent-open", class:"btn fa fa-eye"}).appendTo($('footer .footer-section-meta .frame.meta'));
+    lib.cookieconsent.20 = TEXT
+    lib.cookieconsent.20.value (
+ <script>
+var p = p || {},gaOptout = gaOptout || false, gaOptin = gaOptin || false, tp3_app = tp3_app || {};
 
-$('#cookieconsent-open').on('click',
-        function(e) {
+var btn = $('<button/>',{id :"privacyPopup-open", class:"btn fa fa-eye"}).appendTo($('footer .footer-section-meta .frame.meta'));
+
+$('#privacyPopup-open').on('click',  function(e) {
+        tp3_app.privacyPopup();
+        });
+tp3_app.privacyPopup =  function(e) {
             $j('#privacyProtect').remove();
-            e.preventDefault();
             var $this = $j(this)
                 , $modal = $('<div class="modal fade right " id="privacyProtect" tabindex="-1" role="dialog"  data-backdrop="false">\n' +
                 '  <div class="modal-dialog modal-side modal-bottom-right" role="document">\n' +
@@ -256,10 +258,10 @@ $('#cookieconsent-open').on('click',
                 '      <div class="modal-header">\n' +
                 '        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' +
                 '      </div>\n' +
-                '      <div class="modal-body">{$plugin.tx_tp3mods_tp3micro.settings.cookieconsent}' +
+                '      <div class="modal-body">{$plugin.tx_tp3mods_tp3micro.settings.cookieconsent}  <a href="/?id={$plugin.tx_tp3mods_tp3micro.privacyPid}" >mehr hierzu</a>' +
                 '      </div>\n' +
                 '      <div class="modal-footer"> <button type="button"  id="privacyProtect_Nein" class="btn btn-default" data-dismiss="modal">Nein</button>\n' +
-                '       <button type="button" id="privacyProtect_OK" class="btn btn-primary">OK</button>\n' +
+                '       <button type="button" id="privacyProtect_OK" class="btn btn-primary" data-dismiss="modal">OK</button>\n' +
                 '      </div>\n' +
                 '    </div>\n' +
                 '  </div>\n' +
@@ -273,15 +275,35 @@ $('#cookieconsent-open').on('click',
                 $("body").removeClass("modal-open");
             });
 
-        })
+       $('#privacyProtect_Nein').on('click', function(e) {
+                        tp3_app.cookies = false;
+                       if(gaOptout && $.type(gaOptout) == "function") gaOptout();
+                        tp3_app.privacyRequest(0);
+
+             })
+       $('#privacyProtect_OK').on('click', function(e) {
+
+                    tp3_app.cookies = true;
+                    if(gaOptin && $.type(gaOptin) == "function")gaOptin();
+                    tp3_app.privacyRequest(1);
+            })
+    return false;
+    };
+    var privacyPopup_open = privacyPopup_open || 0;
+if(privacyPopup_open != "1")tp3_app.privacyPopup();
 </script>
     )
+[end]
     /*
     add cookieconsent
     */
     page.footerData.555 < lib.cookieconsent
 
-[end]
+
+
+
+
+
 /*
 tt_content {
 tp3mods_downloads < lib.fluidContent

@@ -48,7 +48,7 @@ window.addEventListener("load", function(){
 });
 var footermeta = $('.footer .footer-section-meta .frame.meta');
 var btn = document.createElement('button');
-btn.id ="cookieconsent-open";
+btn.id ="privacyPopup-open";
 btn.innerHTML = '<b>Cookies</b>';
 footermeta.appendChild(btn);
 
@@ -82,7 +82,7 @@ document.getElementById('btn-revokeChoice').onclick = function (e) {
 
 };
 
-document.getElementById('cookieconsent-open').onclick = function (e) {
+document.getElementById('privacyPopup-open').onclick = function (e) {
     log("Calling <em>open()</em>");
     p.open();
 };

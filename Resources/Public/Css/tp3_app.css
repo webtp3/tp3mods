@@ -168,7 +168,7 @@ tt_address
  */
 @media (min-width:992px){.meta-section ul,.meta-section p{margin:0}
     .meta-section .copyright{text-align:right}
-    .row{
+    footer .row{
         display: inline-flex;
         padding: 10px;
         width: 100%;

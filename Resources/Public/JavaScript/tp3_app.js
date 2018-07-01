@@ -120,6 +120,8 @@ tp3_app.initialize=function(){
                 //  if(gapi && $j.type(gapi) == "object")  gapi.plus.go();
             })
             if ( WECInit == undefined)  tp3_app.init = true;
+
+            if(!tp3_app.getCookieValue(disableStr)) tp3_app.privacyPopup();
         }
     }catch (e){
         console.log(e);
@@ -387,7 +389,25 @@ tp3_app.privacyRequest = function(choise){
 
     return false;
 }
-
+tp3_app.getCookieValue = function(name) {
+    var value = document.cookie;
+    var cookieStartsAt = value.indexOf(" " + name + "=");
+    if (cookieStartsAt == -1) {
+        cookieStartsAt = value.indexOf(name + "=");
+    }
+    if (cookieStartsAt == -1) {
+        value = null;
+    } else {
+        cookieStartsAt = value.indexOf("=", cookieStartsAt) + 1;
+        var cookieEndsAt = value.indexOf(";", cookieStartsAt);
+        if (cookieEndsAt == -1) {
+            cookieEndsAt = value.length;
+        }
+        value = unescape(value.substring(cookieStartsAt,
+            cookieEndsAt));
+    }
+    return value;
+}
 tp3_app.onpage = function(){
 
 
@@ -435,6 +455,12 @@ tp3_app.controls = function(){
     $j('input[type="checkbox"]').each(function(){
         $j(this).insertBefore($j(this).parent('label'))
     })
+    if(!tp3_app.getCookieValue(disableStr)){
+       if( $j.type("recordOutboundLink") == "function" ){
+           $j. recordOutboundLink();
+       }
+    }
+
     $j('.ajaxModal, [data-toggle="ajaxModal"]').on('click',
         function(e) {
             $j('#ajaxModal').remove();
@@ -661,13 +687,16 @@ $j(document).promise().done(function( ) {
 
     console.log("promise");
     tp3_app.init = false;
-    // $j(document).trigger('loaded');
     try {
-        window.dispatchEvent(new Event('loaded'))
+        var evt = new Event('loaded');
+        window.dispatchEvent(evt)
     }
     catch (e) {
-        var evt = window.createEvent('Event');
+      /*  var evt = document.createEvent('Event');
         window.dispatchEvent( evt);
         evt.initEvent("loaded", true, true);
+        */
+        $j(window).trigger('loaded');
+
     }
 })

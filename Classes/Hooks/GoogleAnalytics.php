@@ -46,6 +46,8 @@ namespace Tp3\Tp3mods\Hooks;
 //require_once \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('frontend') . 'Classes/ContentObject/ContentObjectRenderer.php';
 
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+use TYPO3\CMS\Core\Page\PageRenderer;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * This extension is used to insert the Google Analytics
@@ -60,7 +62,9 @@ class GoogleAnalytics   {
 	//public $scriptRelPath = 'tx_wegoogleanalytics.php';
 	public $extKey = 'tp3mods';
 
-	protected $pageRenderer;
+    protected $pageRenderer;
+
+    public $tracking = null;
 	/**
 	 * Insert Google Analytics Code before the output of the page
 	 *
@@ -97,9 +101,20 @@ class GoogleAnalytics   {
         $this->content = $content;
         $con = $content;
         $session =  $GLOBALS['TSFE']->fe_user->fetchUserSession();
+        if (!($this->pageRenderer instanceof PageRenderer)) {
+            $this->pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
+        }
        if($session){
-           $tracking = $GLOBALS ['TSFE']->fe_user->getKey ('ses', 'tracking');
-           if($tracking === null ){
+           $GLOBALS['TSFE']->fe_user->setKey ('ses', 'privacyPopup',1);
+           if ($GLOBALS['TSFE']->loginUser) {
+               $this->tracking = $GLOBALS ['TSFE']->fe_user->getKey ('user', 'tracking');
+           } else {
+               $this->tracking = $GLOBALS ['TSFE']->fe_user->getKey ('ses', 'tracking');
+           }
+          // $this->pageRenderer->addJsInlineCode("privacyPopup",'var privacyPopup_open = "' .$this->tracking.'"');
+           $this->pageRenderer->addJsInlineCode("privacyPopup",'var privacyPopup_open = "'.$GLOBALS['TSFE']->fe_user->getKey ('ses', 'privacyPopup').'"');
+
+           if($this->tracking === null ){
                /*
                 * Init choise
                 */
@@ -107,7 +122,7 @@ class GoogleAnalytics   {
                $GLOBALS['TSFE']->fe_user->storeSessionData();
 
            }
-           elseif($tracking != 1){
+           elseif($this->tracking != 1){
 
                /*
                 * Disable tracking
@@ -116,6 +131,8 @@ class GoogleAnalytics   {
            }
 
        }else{
+           $this->pageRenderer->addJsInlineCode("privacyPopup",'var privacyPopup_open = privacyPopup_open || "0"');
+
            session_start ();
            $GLOBALS ['TSFE']->fe_user->setKey ('ses', 'tracking', 1);
            $GLOBALS['TSFE']->fe_user->storeSessionData();
@@ -149,7 +166,7 @@ class GoogleAnalytics   {
 					// Async is default
 				$content = $this->insertAsyncGaCode($con);
 			}
-		} else if($tracking != 0) {
+		} else if($this->tracking != 0) {
 			$errorMessage = '<!--' ;
 			$errorMessage .= '     Ooops: Syntaxcheck of Google Analytics Account Number failed!' ;
 			$errorMessage .= '     Maybe misspelled entry in config.tx_tp3mods.account.' ;
@@ -157,7 +174,7 @@ class GoogleAnalytics   {
 			$errorMessage .= '     Please use the following format UA-xxxx-y ,' ;
 			$errorMessage .= '     or for mobile tracking, use MO-xxxx-y.' ;
 			$errorMessage .= '-->' ;
-			$content = $this->insertTrackerCode($con, $errorMessage, 'headEnd');
+            $this->content = $this->insertTrackerCode($con, $errorMessage, 'headEnd');
 		}
 		return $this->content;
 	}
@@ -396,20 +413,37 @@ class GoogleAnalytics   {
 			// Include optout only once
 		} else {
 			if ($this->conf['optout'] == 1) {
-				// Disable tracking if the opt-out cookie exists.
-				$gaOptout .= "var disableStr = 'ga-disable-" . str_replace('MO', 'UA', $this->conf['account']) . "';
-if (document.cookie.indexOf(disableStr + '=true') > -1) {
-	window[disableStr] = true;
-}" ;
-				if ($this->conf['optout.']['disablefunction'] == 0) {
-					// Opt-out function
-					$gaOptout .= "function gaOptout() {
-	document.cookie = disableStr + '=true; expires=Thu, 31 Dec 2099 23:59:59 UTC; path=/';
-	window[disableStr] = true;
-}" ;
-				}
-			}
-		}
+                        // Disable tracking if the opt-out cookie exists.
+                        $gaOptout .= "var cookieconsent_status = 'cookieconsent_status', privacyPopup_open = privacyPopup_open || '', ";
+                        $gaOptout .= " disableStr = 'ga-disable-" . str_replace('MO', 'UA', $this->conf['account']) . "';
+                    
+                        if (document.cookie.indexOf(disableStr + '=true') > -1) {
+                            window[disableStr] = true;
+                            privacyPopup_open='1';
+                        }
+                          if (document.cookie.indexOf(cookieconsent_status ) > -1) {
+                            privacyPopup_open='1';
+                        }" ;
+                                        if (is_array($this->conf['optout.']) && $this->conf['optout.']['disablefunction'] == 0) {
+                                            // Opt-out function
+                                            $gaOptout .= "function gaOptout() {
+                            document.cookie = disableStr + '=true; expires=Thu, 31 Dec 2099 23:59:59 UTC; path=/';
+                             document.cookie = cookieconsent_status + '=deny; expires=Thu, 31 Dec 2099 23:59:59 UTC; path=/';
+                            window[cookieconsent_status] = false;
+                            window[disableStr] = true;
+                                    alert('Das Tracking ist jetzt deaktiviert'); 
+                        
+                        }" ;
+                                            $gaOptout .= "function gaOptin() {
+                            document.cookie = disableStr + '=true; expires=Thu, 01 Jan 1970 00:00:01 UTC; path=/';
+                            document.cookie = cookieconsent_status + '=dismiss; expires=Thu, 31 Dec 2099 23:59:59 UTC; path=/';
+                            window[cookieconsent_status] = true;
+                            window[disableStr] = false;
+                        }" ;
+                }
+            }
+        }
+
 		/**
 		 * Tracking Multiple Domains
 		 * https://developers.google.com/analytics/devguides/collection/gajs/gaTrackingSite
@@ -573,24 +607,28 @@ if (document.cookie.indexOf(disableStr + '=true') > -1) {
 		$gaOptout = '';
 		if ($this->conf['optout'] == 1) {
 			// Disable tracking if the opt-out cookie exists.
-            $gaOptout .= "var enableStr = 'ga-enable-" . str_replace('MO', 'UA', $this->conf['account']). "',";
+            $gaOptout .= "var cookieconsent_status = 'cookieconsent_status',";
             $gaOptout .= " disableStr = 'ga-disable-" . str_replace('MO', 'UA', $this->conf['account']) . "';
-			
-if (document.cookie.indexOf(disableStr + '=true') > -1) {
-	window[disableStr] = true;
-}" ;
-			if (is_array($this->conf['optout.']) && $this->conf['optout.']['disablefunction'] == 0) {
-				// Opt-out function
-				$gaOptout .= "function gaOptout() {
-	document.cookie = disableStr + '=true; expires=Thu, 31 Dec 2099 23:59:59 UTC; path=/';
-	window[disableStr] = true;
-	        alert('Das Tracking ist jetzt deaktiviert'); 
-
-}" ;
+                    
+                        if (document.cookie.indexOf(disableStr + '=true') > -1) {
+                            window[disableStr] = true;
+                        }" ;
+            if (is_array($this->conf['optout.']) && $this->conf['optout.']['disablefunction'] == 0) {
+                // Opt-out function
+                $gaOptout .= "function gaOptout() {
+                            document.cookie = disableStr + '=true; expires=Thu, 31 Dec 2099 23:59:59 UTC; path=/';
+                             document.cookie = cookieconsent_status + '=dismiss; expires=Thu, 31 Dec 2099 23:59:59 UTC; path=/';
+                            window[cookieconsent_status] = true;
+                            window[disableStr] = true;
+                                    alert('Das Tracking ist jetzt deaktiviert'); 
+                        
+                        }" ;
                 $gaOptout .= "function gaOptin() {
-	document.cookie = disableStr + '=true; expires=Thu, 01 Jan 1970 00:00:01 UTC; path=/';
-	window[enableStr] = true;
-}" ;
+                            document.cookie = disableStr + '=true; expires=Thu, 01 Jan 1970 00:00:01 UTC; path=/';
+                            document.cookie = cookieconsent_status + '=deny; expires=Thu, 01 Jan 1970 00:00:01 UTC; path=/';
+                            window[cookieconsent_status] = false;
+                            window[disableStr] = false;
+                        }" ;
 			}
 		}
 		// Create initial options object
@@ -665,6 +703,7 @@ if (document.cookie.indexOf(disableStr + '=true') > -1) {
 	 * 
 	 */
 	protected function insertTrackerCode($con, $gaCode, $position) {
+        $gaCode .="<script>var privacyPopup_open = privacyPopup_open || '". $GLOBALS['TSFE']->fe_user->getKey ('ses', 'privacyPopup')."' </script>";
 		switch($position) {
 			case 'headEnd':
                 $this->content["headerData"][]= $gaCode;
@@ -679,7 +718,10 @@ if (document.cookie.indexOf(disableStr + '=true') > -1) {
 			default:
               //  $con["footerData"] .= $gaCode;
 		}
-		//return $con;
+       if( $GLOBALS ['TSFE']->fe_user->getKey ('ses', 'privacyPopup') != 1)$GLOBALS ['TSFE']->fe_user->setKey ('ses', 'privacyPopup', 1);
+
+
+        //return $con;
 	}
 }
 /*
