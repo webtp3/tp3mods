@@ -151,7 +151,13 @@ else
     $j('body').removeClass('ismobile');
 
 (scroll = function(event) {
+    if(scroll_pos  == (headerPos)) {
+        $j('header.navbar-top').addClass("toppos");
 
+    }
+    else{
+        $j('header.navbar-top').removeClass("toppos");
+    }
     if(mobile != true || headerwidth > 600) {
         var scrollPos = $j(document).scrollTop();
         if(scroll_pos  == (headerPos)) {

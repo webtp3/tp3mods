@@ -48,7 +48,28 @@
     &:extend(.navbar-inverse all);
 }
 @media (min-width: @grid-float-breakpoint) {
-    .navbar-default-transition,
+    .navbar-default-transition{
+        .transition(all 0.27s cubic-bezier(0, 0, 0.58, 1) 0s);
+        background-color: transparent;
+        border-color: transparent;
+        .navbar-nav > .open,
+        .navbar-nav > .active,
+        .navbar-nav > li {
+            > a,
+            > a:hover,
+            > a:focus {
+                color: lighten(@navbar-inverse-link-active-color,15%);
+            }
+        }
+        .navbar-brand {
+            > .navbar-brand-logo-normal {
+                display: none;
+            }
+            > .navbar-brand-logo-inverted {
+                display: block;
+            }
+        }
+    }
     .navbar-inverse-transition {
         .transition(all 0.27s cubic-bezier(0, 0, 0.58, 1) 0s);
         background-color: transparent;
@@ -59,7 +80,7 @@
             > a,
             > a:hover,
             > a:focus {
-                color: lighten(@navbar-default-link-active-color,15%);
+                color: darken(@navbar-inverse-link-color,15%);
             }
         }
         .navbar-brand {
@@ -122,7 +143,7 @@
         position: absolute;
         margin-left: -100%;
         width: 200%;
-        background-color: @navbar-default-border;
+        background-color: transparent;
         height: 1px;
     }
     @media (max-width: @grid-float-breakpoint-max) {

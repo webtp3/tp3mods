@@ -1176,7 +1176,7 @@
           var tempName = 'callback' + Date.now();
           window[tempName] = function(res) {
             service.__JSONP_DATA = JSON.stringify(res);
-          };
+          }
           return tempName;
         }
         if (param in serviceOpts.interpolateUrl) {
@@ -1345,7 +1345,7 @@
 
       if (Array.isArray(requestHeaders)) {
         for (var i = 0, l = requestHeaders.length; i < l; ++i) {
-          var split = requestHeaders[i].split(':', 2);
+          var split = requestHeaders[i].split(':', 2)
           xhr.setRequestHeader(split[0].replace(/^\s+|\s+$/g, ''), split[1].replace(/^\s+|\s+$/g, ''));
         }
       }
