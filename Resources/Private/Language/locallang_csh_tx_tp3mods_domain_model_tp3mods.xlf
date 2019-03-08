@@ -15,8 +15,23 @@
 			<trans-unit id="konfiguration.description">
 				<source>Repository of config</source>
 			</trans-unit>
+			<trans-unit id="snippet_type.description">
+				<source>snippetType</source>
+			</trans-unit>
+			<trans-unit id="main_entry.description">
+				<source>mainEntry</source>
+			</trans-unit>
+			<trans-unit id="aggregate_rating.description">
+				<source>aggregateRating</source>
+			</trans-unit>
 			<trans-unit id="address.description">
 				<source>address</source>
+			</trans-unit>
+			<trans-unit id="tx_tp3mods_domain_model_tp3micro">
+				<source>tp3 microdata</source>
+			</trans-unit>
+			<trans-unit id="tx_tp3mods_domain_model_tp3micro.description">
+				<source></source>
 			</trans-unit>
 		</body>
 	</file>

@@ -21,21 +21,24 @@ plugin.tx_tp3mods_tp3micro {
     }
     privacyProtect = {$plugin.tx_tp3mods_tp3micro.privacyProtect}
     privacyPid = {$plugin.tx_tp3mods_tp3micro.privacyPid}
-    settings{
+    settings {
         Tp3App = {$plugin.tx_tp3mods_tp3micro.settings.Tp3App}
         glyphicons = {$plugin.tx_tp3mods_tp3micro.settings.glyphicons}
         awesomeicons = {$plugin.tx_tp3mods_tp3micro.settings.awesomeicons}
         Tp3Css = {$plugin.tx_tp3mods_tp3micro.settings.Tp3Css}
+        Tp3Isotop = {$plugin.tx_tp3mods_tp3micro.settings.Tp3Isotop}
+        Tp3Flip = {$plugin.tx_tp3mods_tp3micro.settings.Tp3Flip}
+        Tp3TagCloud = {$plugin.tx_tp3mods_tp3micro.settings.Tp3TagCloud}
         account = {$google_analytics}
         trackexternal  = {$plugin.tx_tp3mods_tp3micro.settings.trackexternal}
         anonymized = {$plugin.tx_tp3mods_tp3micro.settings.anonymized}
         advertizing = {$plugin.tx_tp3mods_tp3micro.settings.advertizing}
-        demographics =  {$plugin.tx_tp3mods_tp3micro.settings.demographics}
-        trackpageload =  {$plugin.tx_tp3mods_tp3micro.settings.trackpageload}
-        inpagelinkid =  {$plugin.tx_tp3mods_tp3micro.settings.inpagelinkid}
-        doubleclick =  {$plugin.tx_tp3mods_tp3micro.settings.doubleclick}
-        UAdualtag =  {$plugin.tx_tp3mods_tp3micro.settings.UAdualtag}
-        bouncerate =  {$plugin.tx_tp3mods_tp3micro.settings.bouncerate}
+        demographics = {$plugin.tx_tp3mods_tp3micro.settings.demographics}
+        trackpageload = {$plugin.tx_tp3mods_tp3micro.settings.trackpageload}
+        inpagelinkid = {$plugin.tx_tp3mods_tp3micro.settings.inpagelinkid}
+        doubleclick = {$plugin.tx_tp3mods_tp3micro.settings.doubleclick}
+        UAdualtag = {$plugin.tx_tp3mods_tp3micro.settings.UAdualtag}
+        bouncerate = {$plugin.tx_tp3mods_tp3micro.settings.bouncerate}
         trackexternal = {$plugin.tx_tp3mods_tp3micro.settings.trackexternal}
         type = {$plugin.tx_tp3mods_tp3micro.settings.type}
         demographics = {$plugin.tx_tp3mods_tp3micro.settings.demographics}
@@ -99,93 +102,65 @@ module.tx_tp3mods_tools_tp3modstp3backend {
 }
 lib.fluidContent {
     templateRootPaths {
-        200 = EXT:tp3mods/Resources/Private/Templates/
+        200 = EXT:tp3mods/Resources/Private/Templates/ContentElements/
     }
     partialRootPaths {
-        200 = EXT:tp3mods/Resources/Private/Partials/
+        200 = EXT:tp3mods/Resources/Private/Partials/ContentElements/
     }
     layoutRootPaths {
-        200 = EXT:tp3mods/Resources/Private/Layouts/
+        200 = EXT:tp3mods/Resources/Private/Layouts/ContentElements/
     }
 }
 
 #back move effect
-# todo prallax scrolling
-
-//Include header image if in page properties
-
-lib.containerBackgroundImage = COA
-lib.containerBackgroundImage {
-    wrap = <style>|</style>
-    5 = TEXT
-    5.data = page:uid
-    #5.wrap = section#p|
-    5.wrap = #pid-| > .body-bg
-    10 = TEXT
-    10.wrap = {|}
-    10.data = levelmedia:-1,slide
-
-    10.split {
-        token = ,
-        cObjNum = 1
-        1 {
-
-            10 = IMG_RESOURCE
-            #  params = class="flexible"
-            10.file {
-                import.current = 1
-                import = uploads/media/
-                treatIdAsReference = 1
-
-                // beispiel breite höhe
-                width = 1920
-                maxH = 1080
-            }
-        }
-
-        1.wrap = background:url(/|) no-repeat top center; background-size: cover;   background-attachment: fixed;
-    }
-
-
+# todo parallax as fluid template?
+[globalVar = TSFE:page|tp3parallax = 1]
+page.jsInline{
+    112113 = TEXT
+    112113.value(
+        var tp3parallax = true;
+    )
 }
-
-
 lib.containerBackgroundImagejs = COA
 lib.containerBackgroundImagejs {
-    wrap = <script>|</script>
-    5 = TEXT
-    5.data = page:uid
-    5.wrap = var section_image = {"section#p|":
-    10 = TEXT
-    10.wrap = [|]}
-    10.data = levelmedia:-1,slide
 
-    10.split {
-        token = ,
-        cObjNum = 1
-        max = 5
-        sort = rand()
+    1 = TEXT
+    1.value = <script>var section_image = section_image || [], section_speed = section_speed || [];
 
-        1 {
-
-            10 = IMG_RESOURCE
-            #  params = class="flexible"
-            10.file {
-                import.current = 1
-                import = uploads/media/
-                treatIdAsReference = 1
-                # todo get size from register
-                // beispiel breite höhe
-                width = 1920
-                maxH = 1080
+    2 = COA
+    2{
+        10 = FILES
+        10{
+            references {
+                data = levelmedia: -1, slide
+                table = pages
+                fieldName  = media
             }
         }
+        10.begin = 0
+        10.maxItems = 10
 
-        1.wrap = {background:"|"},
+        10.renderObj = TEXT
+        10.renderObj {
+            data = file:current:publicUrl
+            wrap = {background:"|"},
+
+        }
+
     }
+    2.wrap = section_image.push( | );
+    3 < .2
+    3.10.renderObj {
+        data = file:current:speed
+        wrap = {speed:"|"},
+    }
+    3.wrap = section_speed.push( | );
+    10 = TEXT
+    10.value = </script>
 
 
 }
+[global]
 
 # get logo from content
 
@@ -202,6 +177,38 @@ lib.containerBackgroundImagejs {
             max = 1
             # orderBy = rand()
         }
+    }
+[global]
+
+[globalVar = LIT:0 > {$plugin.tx_tp3mods_tp3micro.settings.Tp3Isotop}]
+    page.includeJSFooterlibs {
+        tp3_isotope = EXT:tp3mods/Resources/Public/JavaScript/isotope.pkgd.js
+        tp3_isotope.async =1
+
+    }
+[global]
+
+[globalVar = LIT:0 > {$plugin.tx_tp3mods_tp3micro.settings.Tp3Flip}]
+    page.includeJSFooterlibs {
+        tp3_flip = EXT:tp3mods/Resources/Public/JavaScript/jquery.flip.js
+        tp3_flip.async =1
+
+    }
+[global]
+
+[globalVar = LIT:0 > {$plugin.tx_tp3mods_tp3micro.settings.Tp3Isotop}]
+   page.includeJSFooterlibs {
+       tp3_isotope = EXT:tp3mods/Resources/Public/JavaScript/isotope.pkgd.js
+       tp3_isotope.async =1
+
+   }
+[global]
+
+[globalVar = LIT:0 > {$plugin.tx_tp3mods_tp3micro.settings.Tp3Flip}]
+    page.includeJSFooterlibs {
+        tp3_flip = EXT:tp3mods/Resources/Public/JavaScript/jquery.flip.js
+        tp3_flip.async =1
+
     }
 [global]
 
@@ -251,24 +258,26 @@ page {
     shortcutIcon = fileadmin/user_upload/{$username}/favicon.ico
     bodyTagCObject = TEXT
     bodyTagCObject.field = uid
-    bodyTagCObject.wrap = <body id="pid-|" data-{$app_name}role="page" data-spy="scroll" data-target=".navbar-collapse" >
+    bodyTagCObject.wrap = <body id="pid-|" data-{$app_name}role="page" data-spy="scroll" data-target=".navbar-collapse"  itemscope="" itemtype="http://schema.org/{$snippet_type}">
     headerData {
-        112112 < lib.containerBackgroundImage
+        112113 >
+
         112113 < lib.containerBackgroundImagejs
+
 
     }
 
     includeJSlibs {
 
         user = fileadmin/user_upload/{$username}/script.js
-        user.async = 1
+        user.async = 0
 
 
     }
 
     includeCSS {
         #enabled less css
-        #bootstrap = EXT:tp3mods/Resources/Public/Less/Bootstrap/bootstrap.less
+        bootstrap = EXT:tp3mods/Resources/Public/Less/Bootstrap/bootstrap.less
         theme = EXT:tp3mods/Resources/Public/Less/Theme/theme.less
 
         #User Css
@@ -277,11 +286,15 @@ page {
     }
 
     includeJSFooterlibs {
+        responsiveimages >
+        responsiveimages = EXT:tp3mods/Resources/Public/JavaScript/jquery.responsiveimages.js
+
         tp3 = fileadmin/user_upload/{$username}/tp3.js
         tp3_app = EXT:tp3mods/Resources/Public/JavaScript/tp3_app.js
-        tp3_app.async = 0
-        tp3.async = 0
-
+        tp3_app.async = 1
+        tp3.async = 1
+        flexslider2 = EXT:bootstrap_grids/Resources/Public/Flexslider2/jquery.flexslider-min.js
+        flexslider2.async = 1
     }
 
     #fluid template
@@ -330,6 +343,9 @@ page {
 
             pagets__newsletter = TEXT
             pagets__newsletter.value = Newsletter
+
+            pagets__panelleft = TEXT
+            pagets__panelleft.value = PanelLeft
 
             default = TEXT
             default.value = Default
@@ -466,6 +482,7 @@ page {
             siteTitle.data = TSFE:tmpl|setup|sitetitle
             rootPage = TEXT
             rootPage.data = leveluid:0
+            lib < lib
             logoAlt = COA
             logoAlt {
                 10 = TEXT
@@ -484,13 +501,19 @@ page {
         }
     }
 }
+[globalVar = LIT:1 = {$plugin.tx_tp3mods_tp3micro.settings.Tp3TagCloud}]
+    page.includeJSFooterlibs {
 
+        tp3_cloud = EXT:tp3mods/Resources/Public/JavaScript/jquery.tagcloud.js
+        tp3_cloud.async = 0
+    }
+[end]
 [globalVar = LIT:1 = {$plugin.tx_tp3mods_tp3micro.settings.Tp3App}]
     page.includeJSFooterlibs {
 
         tp3_app >
         tp3_app = EXT:tp3mods/Resources/Public/JavaScript/tp3_app.js
-        tp3_app.async = 1
+        tp3_app.async = 0
     }
 [end]
 [globalVar = LIT:1 = {$plugin.tx_tp3mods_tp3micro.settings.glyphicons}]
@@ -504,9 +527,11 @@ page {
     page.includeCSS {
         awesomeicons = EXT:tp3mods/Resources/Public/Css/tp3_awesomeicons.css
         awesomeicons.async = 1
-
+        awesomeicons_checkbox = EXT:tp3mods/Resources/Public/Css/awesome-bootstrap-checkbox.css
+        awesomeicons_checkbox.async = 1
     }
 [end]
+
 [globalVar = LIT:1 = {$plugin.tx_tp3mods_tp3micro.settings.Tp3Css}]
     page.includeCSS {
         tp3_app = EXT:tp3mods/Resources/Public/Css/tp3_app.css
@@ -665,32 +690,163 @@ if(privacyPopup_open != "1")tp3_app.privacyPopup();
 </script>
     )
 [end]
-    /*
-    add cookieconsent
-    */
-    page.footerData.555 < lib.cookieconsent
+/*
+add cookieconsent
+*/
+page.footerData.555 < lib.cookieconsent
 
 
 #remove analytics from bootstrap_package
 #and if added jquery
 
-
-
-/*
-tt_content {
-tp3mods_downloads < lib.fluidContent
-tp3mods_downloads {
-templateName = Tp3Downloads.html
-dataProcessing {
-1 = Vendor\YourExtensionKey\DataProcessing\NewContentElementProcessor
-1 {
-useHere = theConfigurationOfTheDataProcessor
-}
-}
-}
-}
-*/
-/*
-remove analytics from bootstrap_package
-*/
 page.jsFooterInline.10 >
+page.includeJSFooterlibs.powermailJQuery >
+
+
+# changes in popup
+
+########################
+#### PAGETYPE POPUP ####
+########################
+popup < page
+popup {
+
+    typeNum = 1000
+    config {
+        disableAllHeaderCode = 1
+        xhtml_cleaning = 0
+        admPanel = 0
+        debug = 0
+        no_cache = 1
+    }
+
+    10 {
+        variables {
+            showHeader.value = 1
+            showFooter.value = 0
+        }
+    }
+}
+config.htmlTag_setParams = lang="de" dir="ltr" prefix="og: http://ogp.me/ns#" class="{$app_name}no-js" itemscope itemtype="http://schema.org/WebSite"
+page.bodyTagCObject.wrap = <body id="pid-|" data-{$app_name}role="page" data-spy="scroll" data-target=".navbar-collapse" itemscope="" itemtype="http://schema.org/{$snippet_type}" >
+
+[globalVar = GP:type = 1000]
+    config.htmlTag_setParams = lang="de" dir="ltr" prefix="og: http://ogp.me/ns#" class="{$app_name} ispopup no-js" itemscope itemtype="http://schema.org/WebSite"
+    page.bodyTagCObject.wrap = <body id="pid-|" data-{$app_name}role="page" data-spy="scroll" data-target=".navbar-collapse" class="ispopup {$css_class}" itemscope="" itemtype="http://schema.org/{$snippet_type}">
+[end]
+config {
+    sys_language_uid = 0
+    language = de
+    locale_all = de_DE.UTF-8
+}
+#############################
+#### LANGUAGE CONDITIONS ####
+#############################
+[globalVar = GP:L = 1]
+    config {
+        sys_language_uid = 1
+        language = de
+        locale_all = de_DE.UTF-8
+    }
+[global]
+[globalVar = GP:L = 2]
+    config {
+        sys_language_uid = 2
+        language = da
+        locale_all = da_DA.UTF-8
+    }
+[global]
+[globalVar = GP:L = 3]
+    config {
+        sys_language_uid = 3
+        language = en
+        locale_all = en_EN.UTF-8
+    }
+[global]
+[globalVar = GP:L = 4]
+    config {
+        sys_language_uid = 4
+        language = es
+        locale_all = es_ES.UTF-8
+    }
+[global]
+[globalVar = GP:L = 5]
+    config {
+        sys_language_uid = 5
+        language = ru
+        locale_all = ru_RU.UTF-8
+    }
+[global]
+[globalVar = GP:L = 6]
+    config {
+        sys_language_uid = 6
+        language = cz
+        locale_all = cz_CZ.UTF-8
+    }
+[global]
+########################
+#### PAGETYPE IFRAME####
+########################
+iframe < page
+iframe {
+
+    typeNum = 2000
+    10 {
+        variables {
+            showHeader.value = 0
+            showFooter.value = 0
+        }
+    }
+}
+
+[globalVar = GP:type = 2000]
+    config.htmlTag_setParams = lang="de" dir="ltr" prefix="og: http://ogp.me/ns#" class="{$app_name} isiframe no-js" itemscope itemtype="http://schema.org/WebSite"
+    page.bodyTagCObject.wrap = <body id="pid-|" data-{$app_name}role="page" data-spy="scroll" data-target=".navbar-collapse" class="isiframe {$css_class}" itemscope="" itemtype="http://schema.org/{$snippet_type}">
+
+[end]
+
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/Address/setup.typoscript">
+
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/RichSnippets/setup.txt">
+
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/Helper/ContentElement.txt">
+
+#############################################################
+#### CONTENT ELEMENT RENDERING                           ####
+#### Manual inclusion to keep control over loading order ####
+#############################################################
+
+#### TYPO3 DEFAULT CONTENT ELEMENT RENDERING
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Audio.txt">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Bullets.txt">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Div.txt">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Header.txt">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Html.txt">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Image.txt">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/List.txt">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Media.txt">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/MenuAbstract.txt">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/MenuCategorizedContent.txt">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/MenuCategorizedPages.txt">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/MenuPages.txt">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/MenuSubpages.txt">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/MenuRecentlyUpdated.txt">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/MenuRelatedPages.txt">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/MenuSection.txt">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/MenuSectionPages.txt">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/MenuSitemap.txt">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/MenuSitemapPages.txt">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Quote.txt">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Shortcut.txt">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Table.txt">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Text.txt">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Textcolumn.txt">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Textteaser.txt">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Textpic.txt">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Textmedia.txt">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Uploads.txt">
+
+[userFunc = TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('bootstrap_grids')]
+    <INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/Grids/setup.typoscript">
+
+[global]

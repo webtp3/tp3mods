@@ -4,6 +4,26 @@
 * tp3
 * 10.5.2018 thomas ruta
 ****************************************************************/
+figure.image{
+    perspective: 500px;
+}
+img.lazyload {
+    transform-style: preserve-3d;
+    opacity: 0.3;
+    -webkit-transition: all  0.3s ease-in 0s;
+    -o-transition: all  0.3s ease-in 0s;
+    transition: all  0.3s ease-in 0s;
+    transform: rotateX(15deg);
+}
+.main-section section:first-child {
+	padding-top: 0px;
+}
+.frame:first-child{
+	padding-top: 0;
+}
+.pswp{
+    z-index: 9999;
+}
 .container.floatingbox {
     width: 100%;
 }
@@ -50,18 +70,20 @@ New Bootstrap
 header .navbar-nav {
         float: right;
         margin: 0;
-    }
+}
 .footer-section-meta > .container >.frame {
     width: 33%;
     float: left;
 }
-div.main-section .frame{
-    padding-top: 0;
-}
+
 .logo > .frame{
     padding : 0;
 }
 
+.navbar-brand > img,.navbar-brand > .logo {
+    backface-visibility: hidden;
+    position: absolute;
+}
 .loader {
     border: 16px solid #f3f3f3; /* Light grey */
     border-top: 16px solid #3498db; /* Blue */
@@ -86,16 +108,19 @@ div.main-section .frame{
 
 .toolbar {
     font-size: 10px;
-    padding: 0px 20px;
     margin: 0;
+    z-index: 9;
+    padding: 10px 20px 0;
+    text-align: left;
     float: right;
-    text-align: right;
-    display: inline-flex;
-    clear: right;
 }
 .toolbar .texticon-content {
     overflow: visible;
-    display: inline-flex;
+    display: none;
+    font-size: 10px;
+}
+.flat .toolbar  .texticon-content {
+    font-size: 15px;
 }
 .toolbar .texticon.texticon-left {
     padding-left: 20px;
@@ -118,11 +143,15 @@ div.main-section .frame{
 div.main-section .frame-jumbotron [class^="col"] {
     background: transparent;
 }
+
 #content .subnav-wrap .hidden-xs {
     display: block!important;
 }
 
-.connecting-dots{position: absolute;}
+.connecting-dots{
+    position: absolute;
+    z-index: -1;
+}
 
 .modal-dialog.modal-side.modal-bottom-right {
     right: 30px;
@@ -132,16 +161,78 @@ div.main-section .frame-jumbotron [class^="col"] {
 .modal-open .modal-side {
     overflow: auto!important;
 }
+/*
+News Tag List
+ */
+span.news-list-tags, .news-list-tags {
+	clear: both;
+	width: 100%;
+	display: inline-block;
+}
+.news-list-tags .label.label-info {
+	float: left;
+}
+/*
+Carousel CSS Adds
+ */
+.carousel-inner .item.carousel-item-type-header .valign{
+    transform-style: preserve-3d;
+    transform-origin: center center;
+    transition: transform 5s;
+}
+.carousel-text-inner {
+    text-shadow: rgba(2, 2, 2, 1) 2px 2px 1px;
+    text-align: left;
+}
+.item.carousel-item-type.carousel-item-type-header.next,
+.item.carousel-item-type.carousel-item-type-header.active.right {
+    transform: rotateY( -180deg );
+    transition: transform 1s;
 
+}
+.item.carousel-item-type.carousel-item-type-header.prev,
+.item.carousel-item-type.carousel-item-type-header.active.left {
+    transform: rotateY( 180deg );
+    transition: transform 1s;
+
+
+}
+.item.carousel-item-type.carousel-item-type-header.next.left,
+.item.carousel-item-type.carousel-item-type-header.prev.right,
+.item.carousel-item-type.carousel-item-type-header.active {
+    transform: rotateY( 0deg );
+    transition: transform 1s;
+
+}
+
+.item.carousel-item-type.carousel-item-type-header.prev .valign > .vcontainer,
+.item.carousel-item-type.carousel-item-type-header.next .valign > .vcontainer,
+.valign > .vcontainer{
+    transform: rotateX(115deg);
+
+}
+.item.active.carousel-item-type .valign > .vcontainer{
+    transform:rotateX(0deg) translate3d(0em, -5em, -5em);
+    transition: transform 2s;
+}
+.align-right {
+    float: right;
+}
+.align-left {
+    float: left;
+}
 /*
 tt_address
 */
-.tx-ttaddress-pi1 {
+.tt_address_list {
     padding: 10px 5px;
 / / border: 1 pt solid #fff;
     background-color: rgba(255,255,255,0.2);
     border-radius: 5px;
     margin-right: 1px;
+}
+.tt_address_list .address-image-rows .row{
+	background: transparent;
 }
 #content .fa:before {
     padding-right: 5px;
@@ -157,7 +248,9 @@ tt_address
 .tx-ttaddress-pi1 .adr {
     padding: 5px 15px;
 }
-
+.tx-ttaddress-pi1 .item .fa {
+    padding-right: 5px;
+}
 .section.section-default {
     padding-top: 0;
 }
@@ -186,6 +279,19 @@ tt_address
         width: 100%;
     }
 }
+@media (min-width:768px) {
+    .flexslider .gallery-item.col-md-6.col-xs-12 {
+        width: 50%;
+    }
+    /*.main-section .container [id^="c"]:not(.frame-jumbotron) {*/
+        /*background-color: rgba(255, 255, 255, 0.6);*/
+
+    /*}*/
+    .main-section .section:not(.section-primary) {
+        background: transparent;
+    }
+
+}
 @media (max-width:768px) {
     header.navbar-header-main .navbar-brand.navbar-brand-image {
         padding-top: 0;
@@ -211,6 +317,18 @@ tt_address
         padding-right: 0px;
         padding-left: 0px;
     }
+    .tilt .toolbar {
+        font-size: 10px;
+        position: relative;
+        width: 100%;
+        display: none;
+        text-align: center;
+
+    }
+    .tilt .toolbar .texticon-content{
+        display: inline-flex;
+    }
+
 }
 
 @media screen and ( max-width: 991px ) {
@@ -220,13 +338,19 @@ tt_address
     .toolbar .texticon-content {
         display: none;
     }
-    .toolbar {
-        display: inline-block;
+    .toolbar.ismobile {
+        display: inline-flex;
         font-size: 10px;
+        top: 10%;
+        right: 15%;
     }
     #calendar-event .Bild.pic{
         float: none!important;
         padding-bottom:20px;
+    }
+    .Bild.pic {
+        float: right;
+        max-width: 100%;
     }
     .container-fluid {
         padding-left: 0px;
@@ -253,9 +377,38 @@ tt_address
         transform: scale(0.9);
     }
     .navbar-header-main .navbar-brand.navbar-brand-image {
-        padding-top: 0;
+        padding-top: 10px;
     }
 
+    body{
+        /*perspective: 1000px;*/
+    }
+    .tilt{
+        transform:matrix(0.28,-0.14,0.13,0.63,-120,1);
+        -ms-transform:matrix(0.28,-0.14,0.13,0.63,-120,1);
+        -webkit-transform:matrix(0.28,-0.14,0.13,0.63,-120,1);
+/*//        transform: matrix3d(0.6461,-0.42,0.71,0,0.42,0.8827,0.26,0.001,-0.71,-0.26,0.6887,0,-200,100,20,1);*/
+     /*//   -webkit-transform: matrix3d(0.6461,-0.42,0.71,0,0.42,0.8827,0.26,0.001,-0.71,-0.26,0.6887,0,-200,100,20,1);*/
+
+        transition: 2s ease-in-out;
+        transform-origin: right center 0px;
+        -webkit-transform-origin: right center 0px;
+        -webkit-transition: all 0.2s ease 0s;
+
+    }
+    .tiltback{
+        transform:matrix(1.00,0.00,0.00,1.00,0,0);
+        -ms-transform:matrix(1.00,0.00,0.00,1.00,0,0);
+        -webkit-transform:matrix(1.00,0.00,0.00,1.00,0,0);
+        //transform: matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1);
+
+        transition: 2s ease-in-out;
+        transform-origin: right center 0px;
+        -webkit-transform-origin: right center 0px;
+        -webkit-transition: all 0.2s ease 0s;
+
+
+    }
 }
 @media screen and (min-width: 992px){
     .carousel-small .item {
@@ -271,9 +424,32 @@ tt_address
         width: 100%;
         transform: scale(0.9);
     }
-    .greeting  {
-        left: 5%;
-        width: 90%;
+    .gallery-item {
+        padding: 5px;
+    }
+    .row {
+        display: inline-flex;
+        padding: 10px;
+        width: 100%;
+        margin-left: 0px;
+    }
+    .carousel-item-type-header .valign > .vcontainer {
+        display: table-cell;
+        vertical-align: middle;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        left: 0;
+        text-align: left;
+        background: rgba(0, 0, 0, 0.5);
+
+    }
+    .toolbar {
+        position: fixed;
+        display: inline-grid;
+        top: 200px;
+        left:0;
+        float: none;
     }
 }
 
@@ -281,7 +457,9 @@ tt_address
     .meta-section ul, .meta-section p {
         margin: 0
     }
-
+    .navbar-main {
+        clear: right;
+    }
     .meta-section .copyright {
         text-align: right
     }
@@ -291,10 +469,10 @@ tt_address
         padding: 10px;
         width: 100%;
     }
-}
+    .section_image{
+        background-size: 150%;
+        overflow: hidden;
 
-@media (max-width: 768px) {
-    header .navbar-header-main .navbar-brand.navbar-brand-image {
-        padding-top: 0;
     }
 }
+

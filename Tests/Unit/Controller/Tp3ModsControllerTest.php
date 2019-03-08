@@ -1,10 +1,16 @@
 <?php
+
+/*
+ * This file is part of the web-tp3/tp3mods.
+ * For the full copyright and license information, please read the
+ * LICENSE file that was distributed with this source code.
+ */
+
 namespace Tp3\Tp3mods\Tests\Unit\Controller;
 
 /**
  * Test case.
  *
- * @author Thomas Ruta <email@thomasruta.de>
  */
 class Tp3ModsControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 {
@@ -32,12 +38,11 @@ class Tp3ModsControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function listActionFetchesAllTp3ModssFromRepositoryAndAssignsThemToView()
     {
-
         $allTp3Modss = $this->getMockBuilder(\TYPO3\CMS\Extbase\Persistence\ObjectStorage::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $tp3ModsRepository = $this->getMockBuilder(Tp3Mods::class)
+        $tp3ModsRepository = $this->getMockBuilder(\Tp3\Tp3mods\Domain\Model\Tp3Mods::class)
             ->setMethods(['findAll'])
             ->disableOriginalConstructor()
             ->getMock();
