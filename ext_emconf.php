@@ -43,5 +43,4 @@ $EM_CONF[$_EXTKEY] = [
                     'Tp3\\Tp3mods\\ErrorHandling\\' => 'src/'
                 ],
         ],
-
 ];
