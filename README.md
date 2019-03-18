@@ -3,6 +3,7 @@
 [![Daily Downloads](https://poser.pugx.org/web-tp3/tp3mods/d/daily)](https://packagist.org/packages/web-tp3/tp3mods)
 [![Total Downloads](https://poser.pugx.org/web-tp3/tp3mods/downloads)](https://packagist.org/packages/web-tp3/tp3mods)
 [![License](https://poser.pugx.org/web-tp3/tp3mods/license)](https://packagist.org/packages/web-tp3/tp3mods)
+[![Build Status](https://travis-ci.org/webtp3/tp3mods.svg?branch=master)](https://travis-ci.org/webtp3/tp3mods)
 
 resources collections
 - templates

@@ -7,6 +7,12 @@
         "php": ">=7.0 <7.3",
         "typo3/cms-core": "^8.2 || ^9"
     },
+    "require-dev": {
+        "phpunit/phpunit": "*",
+        "web-tp3/chromedriver": "^2",
+        "web-tp3/cag_tests": "^1.2",
+        "typo3/testing-framework": "*"
+    },
     "autoload": {
         "psr-4": {
             "Tp3\\Tp3mods\\": "Classes",
@@ -15,7 +21,19 @@
         }
     },
     "replace": {
-        "tp3mods": "self.version"
+        "tp3mods": "self.version",
+        "web-tp3/tp3mods": "self.version"
+
+    },
+    "scripts": {
+        "test:php:unit": [
+            "@php -v",
+            "@php .Build/bin/phpunit Tests/Unit"
+        ]
+
+    },
+    "config": {
+        "vendor-dir": ".Build/vendor",
+        "bin-dir": ".Build/bin"
     }
-    
 }
