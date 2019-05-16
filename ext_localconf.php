@@ -34,9 +34,8 @@ $GLOBALS['TYPO3_CONF_VARS']['FE']['pageNotFound_handling'] = \Tp3\Tp3mods\Utilit
 
 // Define global hooks array
 if (!isset($tp3modsConfig['errorHandlers'])) {
-    $tp3modsConfig['errorHandlers'] = array();
+    $tp3modsConfig['errorHandlers'] = [];
 }
-
 
 if (TYPO3_MODE == 'BE') {
     /***************
@@ -46,7 +45,7 @@ if (TYPO3_MODE == 'BE') {
         $GLOBALS['TYPO3_CONF_VARS']['RTE']['Presets']['bootstrap'] = 'EXT:tp3mods/Configuration/RTE/Default.yaml';
     }
     if (!$tp3modsConfig['disablePageTs'] == 0 || $tp3modsConfig['disablePageTs'] == false) {
-        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPageTSConfig('<INCLUDE_TYPOSCRIPT: source="FILE:EXT:' . $_EXTKEY . '/Configuration/PageTS/TCEFORM.txt">');
+        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPageTSConfig('<INCLUDE_TYPOSCRIPT: source="FILE:EXT:' . $_EXTKEY . '/Configuration/PageTS/Page/TCEFORM.tsconfig">');
         // \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPageTSConfig('<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/PageTS/setup.txt">');
     }
 
@@ -55,15 +54,51 @@ if (TYPO3_MODE == 'BE') {
      */
     $iconRegistry = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconRegistry::class);
     $iconRegistry->registerIcon(
-        'content-tp3mods-downloads',
+        'tp3mods-tp3mods-downloads',
         \TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider::class,
         ['source' => 'EXT:' . $_EXTKEY . '/Resources/Public/Icons/user_mod_tp3backend.svg']
     );
     $iconRegistry->registerIcon(
-        'plugin-tp3mods-tp3micro',
+        'tp3mods-plugin-tp3micro',
         \TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider::class,
         ['source' => 'EXT:' . $_EXTKEY . '/Resources/Public/Icons/user_plugin_tp3micro.svg']
     );
+
+    $icons = [
+        'accordion',
+        'accordion-item',
+        'card-group',
+        'card-group-item',
+        'carousel',
+        'carousel-item',
+        'carousel-item-backgroundimage',
+        'carousel-item-calltoaction',
+        'carousel-item-header',
+        'carousel-item-html',
+        'carousel-item-image',
+        'carousel-item-textandimage',
+        'beside-text-img-centered-left',
+        'beside-text-img-centered-right',
+        'csv',
+        'externalmedia',
+        'icon-group',
+        'icon-group-item',
+        'listgroup',
+        'menu-card',
+        'social-links',
+        'tab',
+        'tab-item',
+        'texticon',
+        'timeline',
+        'timeline-item'
+    ];
+    foreach ($icons as $icon) {
+        $iconRegistry->registerIcon(
+            'content-bootstrappackage-' . $icon,
+            \TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider::class,
+            ['source' => 'EXT:tp3mods/Resources/Public/Icons/ContentElements/' . $icon . '.svg']
+        );
+    }
 
     /***************
      * Backend Styling for CMS8
@@ -102,14 +137,18 @@ if (TYPO3_MODE == 'BE') {
             }
         }
     }
-}
-else{
+} else {
+
+    /*
+     * webapp
+     *
+     */
+    $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['webapp'] = \Tp3\Tp3mods\Hooks\GoogleWebApp::class . '::getManifest';
 
     /*
     * Rich snippets hook in postrenderer
     */
     $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_pagerenderer.php']['render-postProcess'][] = \Tp3\Tp3mods\Frontend\PageRenderer\Tp3RichSnippetsRenderer::class . '->render';
-
 
     //call only on FE
     /*
@@ -190,6 +229,3 @@ $GLOBALS['TYPO3_CONF_VARS']['FE']['addRootLineFields'] .= ($GLOBALS['TYPO3_CONF_
           }
      }'
   );*/
-
-
-

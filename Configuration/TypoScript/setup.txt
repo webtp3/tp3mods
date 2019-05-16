@@ -251,11 +251,11 @@ lib.containerBackgroundImagejs {
 #}
 
 page = PAGE
+
 page.baseTag >
 page {
     typeNum = 0
-    shortcutIcon >
-    shortcutIcon = fileadmin/user_upload/{$username}/favicon.ico
+    shortcutIcon = {$page.favicon.file}
     bodyTagCObject = TEXT
     bodyTagCObject.field = uid
     bodyTagCObject.wrap = <body id="pid-|" data-{$app_name}role="page" data-spy="scroll" data-target=".navbar-collapse"  itemscope="" itemtype="http://schema.org/{$snippet_type}">
@@ -438,7 +438,12 @@ page {
             snippet {
                 snippet_type = {$snippet_type}
             }
-
+            socialicons{
+                enable = {$page.theme.socialicons.enable}
+            }
+            webApp{
+                enable = {$page.theme.webApp.enable}
+            }
             logo {
                 file = {$page.logo.file}
                 fileInverted = {$page.logo.fileInverted}
@@ -507,13 +512,32 @@ page {
         tp3_cloud = EXT:tp3mods/Resources/Public/JavaScript/jquery.tagcloud.js
         tp3_cloud.async = 0
     }
-[end]
+[end
 [globalVar = LIT:1 = {$plugin.tx_tp3mods_tp3micro.settings.Tp3App}]
     page.includeJSFooterlibs {
 
         tp3_app >
         tp3_app = EXT:tp3mods/Resources/Public/JavaScript/tp3_app.js
         tp3_app.async = 0
+
+}
+[end]
+[globalVar = LIT:1 = {$plugin.tx_tp3mods_tp3micro.settings.Tp3WebApp}]
+    page.includeJSFooterlibs {
+
+
+        tp3_main = EXT:tp3mods/Resources/Public/JavaScript/WebApp/scripts/main.min.js
+        tp3_main.async = 1
+        tp3_messagechanneladapter = EXT:tp3mods/Resources/Public/JavaScript/WebApp/scripts/messagechanneladapter.global.js
+        tp3_messagechanneladapter.async = 1
+        tp3_comlink = EXT:tp3mods/Resources/Public/JavaScript/WebApp/scripts/comlink.global.js
+        tp3_comlink.async = 1
+    }
+    page.includeJSlibs {
+
+
+        tp3_pwacompat = EXT:tp3mods/Resources/Public/JavaScript/WebApp/scripts/pwacompat.min.js
+        tp3_pwacompat.async = 1
     }
 [end]
 [globalVar = LIT:1 = {$plugin.tx_tp3mods_tp3micro.settings.glyphicons}]
@@ -615,7 +639,7 @@ page {
 
 
 
-var btn = $('<button/>',{id :"privacyPopup-open", class:"btn fa fa-eye"}).appendTo($('footer .footer-section-meta .frame.meta'));
+var btn = $('<button/>',{id :"privacyPopup-open", class:"btn fa fa-eye"}).appendTo($('footer .frame.copyright'));
 
 $('#privacyPopup-open').click(function (e) {
     if(p.isOpen())p.close();
@@ -640,7 +664,7 @@ $('#privacyPopup-open').click(function (e) {
  <script>
 var p = p || {},gaOptout = gaOptout || false, gaOptin = gaOptin || false, tp3_app = tp3_app || {};
 
-var btn = $('<button/>',{id :"privacyPopup-open", class:"btn fa fa-eye"}).appendTo($('footer .footer-section-meta .frame.meta'));
+var btn = $('<button/>',{id :"privacyPopup-open", class:"btn fa fa-eye"}).appendTo($('footer .frame.copyright'));
 
 $('#privacyPopup-open').on('click',  function(e) {
         tp3_app.privacyPopup();
@@ -701,7 +725,31 @@ page.footerData.555 < lib.cookieconsent
 
 page.jsFooterInline.10 >
 page.includeJSFooterlibs.powermailJQuery >
+page.jsFooterInline {
+    # Google Analytics
+    10 = COA
+    10 {
+        if {
+            isTrue = {$plugin.tx_tp3mods_tp3micro.settings.Tp3WebApp}
+        }
 
+        10 = TEXT
+        10.data = getenv : REQUEST_URI
+        10.wrap (
+      if('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/typo3conf/ext/tp3mods/Resources/Public/JavaScript/WebApp/sw.js', { scope: '|' })
+          .then(function(registration) {
+                console.log('Service Worker Registered');
+          });
+
+        navigator.serviceWorker.ready.then(function(registration) {
+           console.log('Service Worker Ready');
+        });
+      }
+        )
+
+    }
+}
 
 # changes in popup
 
@@ -752,8 +800,8 @@ config {
 [globalVar = GP:L = 2]
     config {
         sys_language_uid = 2
-        language = da
-        locale_all = da_DA.UTF-8
+        language = nl
+        locale_all = nl_NL.UTF-8
     }
 [global]
 [globalVar = GP:L = 3]
@@ -798,6 +846,20 @@ iframe {
         }
     }
 }
+########################
+#### PAGETYPE error####
+########################
+errorPage < page
+errorPage {
+
+    typeNum = 404
+    10 {
+        variables {
+            showHeader.value = 0
+            showFooter.value = 0
+        }
+    }
+}
 
 [globalVar = GP:type = 2000]
     config.htmlTag_setParams = lang="de" dir="ltr" prefix="og: http://ogp.me/ns#" class="{$app_name} isiframe no-js" itemscope itemtype="http://schema.org/WebSite"
@@ -809,7 +871,7 @@ iframe {
 
 <INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/RichSnippets/setup.txt">
 
-<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/Helper/ContentElement.txt">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/Helper/ContentElement.typoscript">
 
 #############################################################
 #### CONTENT ELEMENT RENDERING                           ####
@@ -817,34 +879,53 @@ iframe {
 #############################################################
 
 #### TYPO3 DEFAULT CONTENT ELEMENT RENDERING
-<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Audio.txt">
-<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Bullets.txt">
-<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Div.txt">
-<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Header.txt">
-<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Html.txt">
-<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Image.txt">
-<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/List.txt">
-<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Media.txt">
-<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/MenuAbstract.txt">
-<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/MenuCategorizedContent.txt">
-<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/MenuCategorizedPages.txt">
-<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/MenuPages.txt">
-<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/MenuSubpages.txt">
-<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/MenuRecentlyUpdated.txt">
-<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/MenuRelatedPages.txt">
-<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/MenuSection.txt">
-<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/MenuSectionPages.txt">
-<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/MenuSitemap.txt">
-<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/MenuSitemapPages.txt">
-<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Quote.txt">
-<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Shortcut.txt">
-<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Table.txt">
-<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Text.txt">
-<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Textcolumn.txt">
-<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Textteaser.txt">
-<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Textpic.txt">
-<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Textmedia.txt">
-<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Uploads.txt">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Audio.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Bullets.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Csv.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Div.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Header.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Html.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Image.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/List.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Media.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/MenuAbstract.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/MenuCategorizedContent.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/MenuCategorizedPages.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/MenuPages.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/MenuSubpages.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/MenuRecentlyUpdated.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/MenuRelatedPages.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/MenuSection.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/MenuSectionPages.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/MenuSitemap.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/MenuSitemapPages.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Quote.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Shortcut.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/SocialLinks.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Table.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Text.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Textcolumn.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Textteaser.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Textpic.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Textmedia.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Uploads.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Accordion.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/CardGroup.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Carousel.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/CarouselSmall.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/CarouselFullscreen.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/ExternalMedia.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/IconGroup.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/ListGroup.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Panel.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Tab.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Texticon.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/Timeline.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/MenuCardDir.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/MenuCardList.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/MenuThumbnailDir.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/ContentElement/MenuThumbnailList.typoscript">
+
 
 [userFunc = TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('bootstrap_grids')]
     <INCLUDE_TYPOSCRIPT: source="FILE:EXT:tp3mods/Configuration/TypoScript/Grids/setup.typoscript">

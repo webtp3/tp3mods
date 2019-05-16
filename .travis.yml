@@ -18,6 +18,7 @@ script:
     echo;
     echo;
     php ./.Build/bin/phpunit Tests/Unit --log-junit UnitTests.log;
+
 #  - >
 #    echo;
 #    echo "Running func tests";

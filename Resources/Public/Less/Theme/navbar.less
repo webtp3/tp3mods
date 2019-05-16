@@ -8,6 +8,7 @@
     &.navbar-fixed-top,
     &.navbar-fixed-bottom {
         position: fixed;
+        z-index: 99;
     }
 }
 
@@ -21,20 +22,118 @@
             display: block;
         }
         > .navbar-brand-logo-inverted {
-            display: block;
+        	display: block;
+        }
+        > img {
+          backface-visibility: hidden;
+          position: absolute;
+        }
+        > .cube {
+            position: relative;
+            transform-style: preserve-3d;
+            //transform: translateZ(-100px);
+            transition: transform 1s;
+            backface-visibility: hidden;
+            > .show-front  { transform: translateZ(-100px) rotateY(   0deg); }
+            > .show-right  { transform: translateZ(-100px) rotateY( -90deg); }
+            > .show-back   { transform: translateZ(-100px) rotateY(-180deg); }
+            > .show-left   { transform: translateZ(-100px) rotateY(  90deg); }
+            > .show-top    { transform: translateZ(-100px) rotateX( -90deg); }
+            > .show-bottom { transform: translateZ(-100px) rotateX(  90deg); }
+            > .cube__face {
+                position: absolute;
+                box-shadow: inset 0px 0px 30px rgba(0, 0, 0, 0.6);
+                background-color: lighten(@navbar-default-bg,15%);
+            }
+            > .cube__face--front  { transform: rotateY(0deg) translateZ(100px); }
+            > .cube__face--right  { transform: rotateY(90deg) translateZ(100px); }
+            > .cube__face--back   { transform: rotateY(180deg) translateZ(100px); }
+            > .cube__face--left   { transform: rotateY(-90deg) translateZ(100px); }
+            > .cube__face--top    { transform: rotateX( 90deg) translateZ(100px); }
+            > .cube__face--bottom { transform: rotateX(-90deg) translateZ(100px); }
+        }
+        > .cube.anim {
+            animation: spin 2s 1 ease-in-out;
         }
 
 }
 
+.navbar-default-transition{
+    > .navbar-brand {
+		transition: transform 2s;
+		transform-style: preserve-3d;
+        > .navbar-brand-logo-normal {
+            display: block;
+            transform: rotateY(180deg);
+
+        }
+        > .navbar-brand-logo-inverted {
+            transform: rotateY(0deg);
+            display: block;
+        }
+        > img {
+            backface-visibility: hidden;
+            position: absolute;
+        }
+    }
+}
+.navbar-default-transition.flat{
+	> .navbar-brand {
+
+		> .navbar-brand-logo-normal {
+			display: block;
+			transform: rotateY(360deg);
+
+		}
+		> .navbar-brand-logo-inverted {
+			transform: rotateY(18deg);
+			display: block;
+		}
+
+	}
+}
+.navbar-inverse-transition{
+	> .navbar-brand {
+		transition: transform 2s;
+		transform-style: preserve-3d;
+		> .navbar-brand-logo-normal {
+			display: block;
+			transform: rotateY(360deg);
+
+		}
+		> .navbar-brand-logo-inverted {
+			transform: rotateY(180deg);
+			display: block;
+		}
+		> img {
+			backface-visibility: hidden;
+			position: absolute;
+		}
+	}
+}
+.navbar-inverse-transition.flat{
+
+	> .navbar-brand-logo-normal {
+		display: block;
+		transform: rotateY(180deg);
+
+	}
+	> .navbar-brand-logo-inverted {
+		transform: rotateY(0deg);
+		display: block;
+	}
+
+}
 @media (min-width: @grid-float-breakpoint) {
     .navbar-brand-image {
         position: relative;
         > img {
-            position: relative;
-            top: 50%;
+            position: absolute;
+            top: 10px;
             transform: translate(0,-50%);
-            max-height: 65%;
+            max-height: 85%;
             width: auto;
+			backface-visibility: hidden;
         }
     }
 }
@@ -66,16 +165,37 @@
             }
         }
         .navbar-brand {
+            > .cube {
+                position: relative;
+                transform-style: preserve-3d;
+                transform: translateZ(-100px);
+                transition: transform 2s;
+                > .cube__face {
+                    position: absolute;
+                    background-color: lighten(@navbar-default-bg,15%);
+                    box-shadow: inset 0px 0px 30px rgba(0, 0, 0, 0.6);
+                }
+                > .cube__face--front  { transform: rotateY(360deg) translateZ(100px); }
+                > .cube__face--right  { transform: rotateY(-90deg) translateZ(100px); }
+                > .cube__face--back   { transform: rotateY(180deg) translateZ(100px); }
+                > .cube__face--left   { transform: rotateY(90deg) translateZ(100px); }
+                > .cube__face--top    { transform: rotateX(-90deg) translateZ(100px); }
+                > .cube__face--bottom { transform:  rotateX(90deg) translateZ(100px); }
+            }
             > .navbar-brand-logo-normal {
                 display: block;
+              transform: rotateY(-180deg);
+
 
             }
             > .navbar-brand-logo-inverted {
-                display: none;
+              transform: rotateY(-360deg);
+                display: block;
 
             }
             > img {
                 backface-visibility: hidden;
+				position: absolute;
             }
         }
     }
@@ -95,16 +215,42 @@
         }
 
         .navbar-brand {
+            > .cube {
+                position: relative;
+                transform-style: preserve-3d;
+                transform: translateZ(-100px);
+                transition: transform 1s;
+
+                > .cube__face {
+                    position: absolute;
+                    background-color: darken(@navbar-default-bg,15%);
+                    box-shadow: inset 0px 0px 30px rgba(0, 0, 0, 0.6);
+
+                }
+                > .cube__face--front  { transform: rotateY(180deg) translateZ(100px); }
+                > .cube__face--right  { transform: rotateY(-90deg) translateZ(100px); }
+                > .cube__face--back   { transform: rotateY(360deg) translateZ(100px); }
+                > .cube__face--left   { transform: rotateY(90deg) translateZ(100px); }
+                > .cube__face--top    { transform: rotateX(-90deg) translateZ(100px); }
+                > .cube__face--bottom { transform: rotateX(90deg) translateZ(100px); }
+            }
+            > .logo.anim {
+                animation: spin 2s 1 ease-in-out;
+            }
             > .navbar-brand-logo-normal {
-                display: none;
+                display: block;
+              transform: rotateY(360deg);
+
 
             }
             > .navbar-brand-logo-inverted {
+              transform: rotateY(180deg);
                 display: block;
 
             }
             > img {
                 backface-visibility: hidden;
+				position: absolute;
 
             }
 
@@ -113,28 +259,45 @@
     .navbar-inverse-transition{
         background-color: @navbar-inverse-bg;
     }
-    .navbar-default-transition{
+    .navbar-default-transition.flat{
         background-color: @navbar-default-bg;
     }
     .navbar-transition {
         .navbar-header-main .navbar-brand,
         .navbar-main > li > .navbar-text,
         .navbar-main > li > a {
-            line-height: @navbar-height;
+            line-height: round(@navbar-height /2);
             height: @navbar-height;
         }
         .navbar-brand {
+            > .cube {
+                position: relative;
+                transform-style: preserve-3d;
+                transform: translateZ(-100px);
+                transition: transform 1s;
+
+                > .cube__face {
+                    position: absolute;
+                    background-color: lighten(@navbar-default-bg,15%);
+                    box-shadow: inset 0px 0px 30px rgba(0, 0, 0, 0.6);
+                }
+                > .cube__face--front  { transform: rotateY(36deg) translateZ(100px); }
+                > .cube__face--right  { transform: rotateY(90deg) translateZ(100px); }
+                > .cube__face--back   { transform: rotateY(180deg) translateZ(100px); }
+                > .cube__face--left   { transform: rotateY(-90deg) translateZ(100px); }
+                > .cube__face--top    { transform: rotateX( 90deg) translateZ(100px); }
+                > .cube__face--bottom { transform: rotateX(-90deg) translateZ(100px); }
+            }
             > .navbar-brand-logo-normal {
                 display: block;
 
             }
             > .navbar-brand-logo-inverted {
-                display: none;
-
+              display: block;
             }
             > img {
                 backface-visibility: hidden;
-             //   position: absolute;
+		    	position: absolute;
             //    animation: spinCube .1s linear ease-in-out;
 
             }
@@ -152,12 +315,12 @@
     .navbar-brand {
         padding-top: 0;
         padding-bottom: 0;
-        font-size: round(@font-size-base * 1.4);
+        font-size: round(@font-size-base);
         font-family: @headings-font-family;
         font-weight: bold;
         text-transform: uppercase;
-        line-height: round(@navbar-height*2);
-        height: round(@navbar-height*2);
+        line-height: round(@navbar-height);
+        height: round(@navbar-height);
         .transition(opacity .15s ease-in-out 0s);
         &:hover {
             opacity: 0.8;
@@ -180,7 +343,7 @@
                 padding-top: 15px;
                 padding-bottom: 15px;
                 > img {
-                    max-height: @navbar-height;
+                    max-height: @navbar-height - 30;
                     width: auto;
                 }
             }
@@ -328,7 +491,7 @@
             }
             > .navbar-text,
             > a {
-                line-height: round(@navbar-height*2);
+                line-height: round(@navbar-height);
                 padding: 0px @navbar-padding-horizontal;
                 .caret {
                     display: none;

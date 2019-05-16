@@ -1,18 +1,12 @@
 {
     "name": "web-tp3/tp3mods",
     "type": "typo3-cms-extension",
-    "description" : "ratings & microdata 4 tp3",
-    "homepage": "https://web.tp3.de",
+    "description" : "mods 4 tp3",
     "license": "GPL-2.0+",
+    "version" : "1.5.0",
     "require": {
-        "php": ">=7.0 <7.3",
+        "php": ">=7.0 <7.4",
         "typo3/cms-core": "^8.2 || ^9"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "*",
-        "web-tp3/chromedriver": "^2",
-        "web-tp3/cag_tests": "^1.2",
-        "typo3/testing-framework": "*"
     },
     "autoload": {
         "psr-4": {
@@ -21,25 +15,8 @@
 
         }
     },
-    "autoload-dev": {
-        "psr-4": {
-            "Tp3\\Tp3mods\\": "Tests/"
-        }
-    },
     "replace": {
-        "tp3mods": "self.version",
-        "web-tp3/tp3mods": "self.version"
-
-    },
-    "scripts": {
-        "test:php:unit": [
-            "@php -v",
-            "@php .Build/bin/phpunit Tests/Unit"
-        ]
-
-    },
-    "config": {
-        "vendor-dir": ".Build/vendor",
-        "bin-dir": ".Build/bin"
+        "tp3mods": "self.version"
     }
+    
 }

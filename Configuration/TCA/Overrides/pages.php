@@ -24,7 +24,7 @@ $extensionKey = 'tp3mods';
                     [ ''],
                 ],
                 'appearance' => [
-                    'collapseAll' => 1,
+                    'collapseAll' => 0,
                     'expandSingle' => 1,
                 ],
 
@@ -75,7 +75,7 @@ $extensionKey = 'tp3mods';
 // TCEFORM
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::registerPageTSConfigFile(
     $extensionKey,
-    'Configuration/PageTS/TCEFORM.txt',
+    'Configuration/PageTS/Page/TCEFORM.tsconfig',
     'EXT:tp3mods : TCEFORM'
 );
 

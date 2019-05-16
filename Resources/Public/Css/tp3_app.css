@@ -16,10 +16,14 @@ img.lazyload {
     transform: rotateX(15deg);
 }
 .main-section section:first-child {
-	padding-top: 0px;
+	padding-top: 0;
 }
 .frame:first-child{
 	padding-top: 0;
+}
+.gallery-row > .gallery-item {
+	padding-bottom: 10px;
+	margin-left: -5px;
 }
 .pswp{
     z-index: 9999;
@@ -48,7 +52,7 @@ div.jumbotron a.btn  {
 
 }
 #tp3Carousel .carousel {
-    padding-bottom: 0px;
+    padding-bottom: 0;
 }
 .vjs-poster {
     margin: 0 auto;
@@ -65,11 +69,23 @@ div.jumbotron a.btn  {
     content:"";
 }
 /*
-New Bootstrap
+New Bootstrap ~10.0
 */
 header .navbar-nav {
         float: right;
         margin: 0;
+}
+.maincontent-wrap > .row >.col-md-6 {
+	padding-left: 0;
+
+}
+.btn-icon svg,
+.btn-icon img{
+	max-width: 100%;
+	max-height: 100%;
+}
+.btn-text {
+	float: left;
 }
 .footer-section-meta > .container >.frame {
     width: 33%;
@@ -118,6 +134,9 @@ header .navbar-nav {
     overflow: visible;
     display: none;
     font-size: 10px;
+}
+.toolbar .texticon-inner-icon {
+	display: inline-block;
 }
 .flat .toolbar  .texticon-content {
     font-size: 15px;
@@ -274,7 +293,7 @@ tt_address
 @media (min-width:992px){.meta-section ul,.meta-section p{margin:0}
     .meta-section .copyright{text-align:right}
     footer .row{
-        display: inline-flex;
+		display: inline-flex;
         padding: 10px;
         width: 100%;
     }
@@ -293,14 +312,12 @@ tt_address
 
 }
 @media (max-width:768px) {
-    header.navbar-header-main .navbar-brand.navbar-brand-image {
-        padding-top: 0;
-    }
+
     .modal-dialog.modal-side.modal-bottom-right {
-        right: 0px;
-        bottom: 0px;
+        right: 0;
+        bottom: 0;
     }
-    td {
+    td,th {
         display: block;
         white-space: normal!important;
     }
@@ -314,8 +331,8 @@ tt_address
         display: table-row;
     }
     div.item.carousel-item-type {
-        padding-right: 0px;
-        padding-left: 0px;
+        padding-right: 0;
+        padding-left: 0;
     }
     .tilt .toolbar {
         font-size: 10px;
@@ -328,6 +345,13 @@ tt_address
     .tilt .toolbar .texticon-content{
         display: inline-flex;
     }
+	#content .maincontent-wrap{
+		padding-left: 0;
+	}
+	.main-section .container {
+		padding-left: 5px;
+		padding-right: 5px;
+	}
 
 }
 
@@ -341,8 +365,8 @@ tt_address
     .toolbar.ismobile {
         display: inline-flex;
         font-size: 10px;
-        top: 10%;
-        right: 15%;
+		position: absolute;
+		right: 0;
     }
     #calendar-event .Bild.pic{
         float: none!important;
@@ -353,8 +377,8 @@ tt_address
         max-width: 100%;
     }
     .container-fluid {
-        padding-left: 0px;
-        padding-right: 0px;
+        padding-left: 0;
+        padding-right: 0;
     }
     .toolbar .frame {
         padding-top: 0;
@@ -366,7 +390,6 @@ tt_address
     }
     .tx-srfeuserregister-pi1 dt ,.tx-srfeuserregister-pi1 dd {
         clear: both;
-        text-align: right;
         width: 100%;
         text-align: left;
     }
@@ -376,6 +399,12 @@ tt_address
         width: 100%;
         transform: scale(0.9);
     }
+	div.toolbar.ismobile {
+		display: block;
+		font-size: 10px;
+		position: relative;
+		right: 0;
+	}
     .navbar-header-main .navbar-brand.navbar-brand-image {
         padding-top: 10px;
     }
@@ -391,8 +420,8 @@ tt_address
      /*//   -webkit-transform: matrix3d(0.6461,-0.42,0.71,0,0.42,0.8827,0.26,0.001,-0.71,-0.26,0.6887,0,-200,100,20,1);*/
 
         transition: 2s ease-in-out;
-        transform-origin: right center 0px;
-        -webkit-transform-origin: right center 0px;
+        transform-origin: right center 0;
+        -webkit-transform-origin: right center 0;
         -webkit-transition: all 0.2s ease 0s;
 
     }
@@ -403,8 +432,8 @@ tt_address
         //transform: matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1);
 
         transition: 2s ease-in-out;
-        transform-origin: right center 0px;
-        -webkit-transform-origin: right center 0px;
+        transform-origin: right center 0;
+        -webkit-transform-origin: right center 0;
         -webkit-transition: all 0.2s ease 0s;
 
 
@@ -428,10 +457,9 @@ tt_address
         padding: 5px;
     }
     .row {
-        display: inline-flex;
-        padding: 10px;
+        padding: 10px 0;
         width: 100%;
-        margin-left: 0px;
+        margin-left: 0;
     }
     .carousel-item-type-header .valign > .vcontainer {
         display: table-cell;
@@ -464,11 +492,7 @@ tt_address
         text-align: right
     }
 
-    .row {
-        display: inline-flex;
-        padding: 10px;
-        width: 100%;
-    }
+
     .section_image{
         background-size: 150%;
         overflow: hidden;
