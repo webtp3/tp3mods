@@ -7,6 +7,14 @@
         "php": ">=7.0 <7.4",
         "typo3/cms-core": "^8.2 || ^9"
     },
+    "require-dev": {
+      "friendsofphp/php-cs-fixer": "^2.0",
+      "web-tp3/cag_tests":"^1.2",
+      "phpunit/phpunit": "*",
+      "helhum/typo3-console": "^5",
+      "typo3/testing-framework": "*"
+
+    },
     "autoload": {
         "psr-4": {
             "Tp3\\Tp3mods\\": "Classes",
