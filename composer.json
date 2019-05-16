@@ -15,8 +15,40 @@
 
         }
     },
+
+    "autoload-dev": {
+        "psr-4": {
+            "Tp3\\Tp3mods\\Tests\\": "Tests"
+        }
+    },
     "replace": {
-        "tp3mods": "self.version"
+        "web-tp3/tp3mods": "self.version"
+    },
+    "extra": {
+        "typo3/cms": {
+            "extension-key": "tp3mods"
+        }
+    },
+    "config": {
+        "vendor-dir": ".Build/vendor",
+        "bin-dir": ".Build/bin"
+    },
+    "scripts": {
+        "typo3-cms-scripts": [
+            "typo3cms install:fixfolderstructure",
+            "typo3cms install:generatepackagestates"
+        ],
+        "post-autoload-dump": [
+            "@typo3-cms-scripts"
+        ],
+        "test:php:unit": [
+            "@php -v",
+            "@php bin/phpunit -c Tests/Build/UnitTests.xml"
+        ],
+        "test:php:func": [
+            "@php -v",
+            "@php bin/phpunit -c Tests/Build/FunctionalTests.xml"
+        ]
+
     }
-    
 }

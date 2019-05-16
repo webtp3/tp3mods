@@ -3,6 +3,8 @@ language: php
 php:
   - 7.1
   - 7.2
+  - 7.3
+
 
 cache:
   directories:
@@ -24,4 +26,6 @@ script:
 #    echo "Running func tests";
 #    echo;
 #    echo;
-#    php ./.Build/bin/phpunit Tests/Functional
+#    php ./.Build/bin/phpunit -c Tests/Build/FunctionalTests.xml  --log-junit FunctionalTests.log;
+
+
